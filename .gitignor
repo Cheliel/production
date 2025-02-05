@@ -1,1 +1,11 @@
-/_VM/
+# Virtual Machine directories
+_VM/
+*/_VM/
+
+# Common VM-related files
+*.vmdk
+*.vdi
+*.vhd
+*.ova
+*.ovf
+*.log
