@@ -1,0 +1,21 @@
+version: '3'
+services:
+  gns3-ubuntu:
+    build:
+      context: .
+      dockerfile: Dockerfile 
+    container_name: gns3-ubuntu
+    privileged: true
+    volumes:
+      - ./gns3:/gns3
+      - /tmp/.X11-unix:/tmp/.X11-unix
+    ports:
+      - "3080:3080"
+      - "3081:3081"
+    networks:
+      - gns3_network
+    restart: unless-stopped
+
+networks:
+  gns3_network:
+    driver: bridge
