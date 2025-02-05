@@ -1,1 +1,13 @@
 _VM/GNS3.VM.VMware.Workstation.2.2.53/GNS3 VM.ova
+
+
+_VM/
+*/_VM/
+
+# Common VM-related files
+*.vmdk
+*.vdi
+*.vhd
+*.ova
+*.ovf
+*.log
