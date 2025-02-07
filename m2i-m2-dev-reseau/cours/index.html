@@ -1,0 +1,2161 @@
+<!doctype html>
+<html lang="fr">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>Réseau</title>
+
+		<meta name="description" content="Réseau">
+		<meta name="author" content="Renaud Goll">
+
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		<link rel="stylesheet" href="dist/reset.css">
+		<link rel="stylesheet" href="dist/reveal.css">
+		<link rel="stylesheet" href="dist/theme/black.css" id="theme">
+		<!-- <link rel="stylesheet" href="dist/theme/beige.css" id="theme"> -->
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="plugin/highlight/gruvbox-dark-hard.css">
+	</head>
+
+	<body>
+		<div class="reveal">
+			<div class="slides">
+
+
+				<section> 
+					<a href="https://www.kernel.org/">
+						<img src="./images/linux.svg" alt="logo Tux" style="height: 180px; margin: 0 auto 4rem auto; background: transparent;" class="demo-logo">
+					</a>
+					<h3>Réseau(x)</h3>
+					<p>
+						<small>Renaud Goll @ TekaTux</small>
+					</p>
+					<small>Document sous licence <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.fr"><img src="./images/by-sa.svg" alt="by-sa" style="height: 40px; margin: 0 auto 0 auto; background: transparent;" class="demo-logo"></a></small>
+				</section>
+
+
+				<section>
+					<a href="https://tekatux.fr">
+						<img src="./images/logo tekatux_long-07.svg" alt="logo TekaTux" style="height: 180px; margin: 0 auto rem4 auto; background: transparent;" class="demo-logo">
+					</a>
+					<h3>TekaTux</h3>
+					<p><small>L'informatique éthique</small></p>
+				</section>
+
+				<section>
+					<ul>
+						<li>Hébergements écologiques</li>
+						<li>Architecture système et réseau</li>
+						<li>Expertise systèmes libres (unix/linux)</li>
+						<li>Cybersécurité</li>
+						<li>RGPD</li>
+						<li>Formations</li>
+					</ul>
+				</section>
+
+
+				<section class="fragments">
+					<h3>Pourquoi ?</h3>
+					<small>
+						<span class="fragment">
+							<p>Les applications d'aujourd'hui sont massivements distribuées. Le moindre problème réseau peut amener des disfonctionnements majeurs. Un des buts de ce cours est de vous donner les recettes qui pourront vous permettre de prévoir des solutions de secours.</p>
+							<p>Une autre raison est de vous donner la Réponse à la Question: au fait, pourquoi ça marche ?</p>
+							<p>Un autre but est de vous faire comprendre que nous sommes passé de l'air des grosses applications à celle des microservices, même si ces microservice ont été inventé en 1970... avec unix et le principe KISS.</p>
+							<p>Aucun de vos codes ne servirait s'il n'était soutenu par une infra.</p>
+							<p>Bref, vous êtes là car votre code sera meilleurs avec ce cours que sans... enfin, j'espère !</p>
+						</span>
+					</small>
+				</section>
+
+
+
+				<section>
+					<section id="fragments">
+						<h3>Les réseaux les plus vieux</h3>
+						<small>
+							<span class="fragment">
+								<p>Le réseau social : le clan (~150 000 ans)</p>
+							</span>
+							<span class="fragment">
+								<p>Le réseau d'irrigation (~5 000 ans Av JC)</p>
+							</span>
+							<span class="fragment">
+								<p>Le réseau commercial (la route de la soie : 139 av JC)</p>
+							</span>
+						</small>
+					</section>
+					<section>
+						<h3>Les réseaux modernes</h3>
+						<small>
+							<ul>
+								<li>Le réseau routier</li>
+								<li>Le réseau férroviaire</li>
+								<li>Le réseau sanitaire</li>
+								<li>Le réseau d'eau potable</li>
+								<li>Le réseau électrique</li>
+								<li>Le réseau fluviale, maritime ou aérien</li>
+							<p>Mais aussi</p>
+								<li>Le réseau d'entreprise</li>
+								<li>Le réseau téléphonique</li>
+								<li>Le réseau internet</li>
+								<li>Les réseaux sociaux</li>
+								<li>...</li>
+							</ul>
+						</small>
+					</section>
+				</section>
+
+
+				<section data-transition="slide" data-background="./images/OS-intro.jpg" data-background-transition="zoom">
+					<h3>Les bases du réseau - histoire</h3>
+				</section>
+
+				<section>
+					<section>
+						<h3>Histoire</h3>
+						<small>
+							<ul>
+								<li>1792: les frères Chappe inventent le télégraphe optique (il en reste un bout au château du Haut-Barr)</li>
+								<li>1836 - 1838: les anglais Edward Davy, William Looke et Charles Wheastone mettent au point le télégraphe</li>
+								<li>1844: Samuel Morse met au point... le morse</li>
+								<li>1876: l'américain Graham Bell invente le téléphone</li>
+								<li>1958: BELL (l'entreprise) invente le premier modem (capable de transmettre des données binaires sur une ligne analogique)</li>
+								<li>1969: naissance d'ARPANET. Premier réseau à commutation de paquet</li>
+								<li>1972: première application majeure pour ARPANET: un logiciel de mail</li>
+								<li>1973: Bob Metcalfe met au point l'interface ethernet</li>
+								<li>1976: ARPANET migre vers IP. 111 ordinateurs sont connectés</li>
+							</ul>
+						</small>
+					</section>
+					<section>
+						<h3>La naissance d'Internet</h3>
+						<small>
+							<ul>
+								<li>1980: Vinton Cerf propose une inter-connexion des réseau CSNET et ARPANET en utilisant TCP/IP. C'est le début d'internet</li>
+								<li>1981: nombre de machine sur internet: 213</li>
+								<li>1982: nombre de machine sur internet: 235</li>
+								<li>1983: nombre de machine sur internet: 562</li>
+								<li>1984: nombre de machine sur internet: 1024</li>
+								<li>1985: nombre de machine sur internet: 1961</li>
+								<li>1986: nombre de machine sur internet: 5089</li>
+							</ul>
+						</small>
+					</section>
+				</section>
+
+
+				<section data-transition="slide" data-background="./images/OS-intro.jpg" data-background-transition="zoom">
+					<h3>Le modèle OSI</h3>
+				</section>
+
+				<section>
+					<section>
+						<h6>Les septs couches du modèle</h6>
+						<small>
+							<table>
+								<tr>
+									<td></td>
+									<td></td>
+									<td>PDU</td>
+									<td>Couche</td>
+									<td>Fonction</td>
+								</tr>
+								<tr>
+									<td style="background:#00AA22"></td>
+									<td>Couches Hautes</td>
+									<td style="color:#00AA22">Données</td>
+									<td>7 - Applications</td>
+									<td>Point d'accès aux services réseaux</td>
+								</tr>
+								<tr>
+									<td style="background:#00AA22"></td>
+									<td>Couches Hautes</td>
+									<td style="color:#00AA22">Données</td>
+									<td>6 - Présentation</td>
+									<td>Gère le chiffrement et le déchiffrement des données</td>
+								</tr>
+								<tr>
+									<td style="background:#00AA22"></td>
+									<td>Couches Hautes</td>
+									<td style="color:#00AA22">Données</td>
+									<td>5 - Session</td>
+									<td>Communication interhost, gère les session entres les différentes applications</td>
+								</tr>
+								<tr>
+									<td style="background:#888811"></td>
+									<td>Couches Hautes</td>
+									<td style="color:#888811">Segment</td>
+									<td>4 - Transport</td>
+									<td>Connection de bout en bout, connectabilité et contrôle de flux</td>
+								</tr>
+								<tr>
+									<td style="background:#BBBB00"></td>
+									<td>Couches Basses</td>
+									<td style="color:#BBBB00">Paquet</td>
+									<td>3 - Réseau</td>
+									<td>Détermine le parcours des données - adressage logique</td>
+								</tr>
+								<tr>
+									<td style="background:#FF9900"></td>
+									<td>Couches Basses</td>
+									<td style="color:#FF9900">Trame</td>
+									<td>2 - Liaison</td>
+									<td>Adressage physique</td>
+								</tr>
+								<tr>
+									<td style="background:#FF4400"></td>
+									<td>Couches Basses</td>
+									<td style="color:#FF4400">Bit</td>
+									<td>1 - Physique</td>
+									<td>Transmission des signaux sous forme numérique ou analogique</td>
+								</tr>
+							</table>
+						</small>
+					</section>
+					<section>
+						<h6>Les septs couches du modèles - exemples</h6>
+						<small>
+							<table>
+								<tr>
+									<td>Couche</td>
+									<td>protocoles</td>
+								</tr>
+								<tr>
+									<td style="color:#00AA22">7 - Applications</td>
+									<td>HTTP - IMAP - DNS - FTP - SSH - Telnet</td>
+								</tr>
+								<tr>
+									<td style="color:#00AA22">6 - Présentation</td>
+									<td>HTML - XML - AFP - CSS</td>
+								</tr>
+								<tr>
+									<td style="color:#00AA22">5 - Session</td>
+									<td>Appletalk - NetBios</td>
+								</tr>
+								<tr>
+									<td style="color:#888811">4 - Transport</td>
+									<td>TCP - UDP</td>
+								</tr>
+								<tr>
+									<td style="color:#BBBB00">3 - Réseau</td>
+									<td>IP - Ipv4 - Ipv6 - ICMP - IGMP</td>
+								</tr>
+								<tr>
+									<td style="color:#FF9900">2 - Liaison</td>
+									<td>ATM - MPLS - Ethernet - ARP - PPP - PPPoE</td>
+								</tr>
+								<tr>
+									<td style="color:#FF4400">1 - Physique</td>
+									<td>1000Base-T - 100Base-T - RS232 - RNIS - Wi-Fi - Thunderbolt - USB</td>
+								</tr>
+							</table>
+						</small>
+					</section>
+				</section>
+
+
+
+				<section data-transition="slide" data-background="./images/OS-intro.jpg" data-background-transition="zoom">
+					<h3>Spécifications - IEEE - IETF</h3>
+					<p>Institute of Electronical and Electrics Engineers</p>
+					<p>et Internet Engineering Task Force</p>
+				</section>
+
+				<section>
+					<section>
+						<h3>IETF</h3>
+						<small>
+							<p>L'IETF est un organisme sans forme juridique. Il n'y a pas de membre, pas d'adhésion, pas de statut</p>
+							<p>Il s'agit donc d'un groupe de personnes totalement informel</p>
+							<p>Sa méthode de communication repose sur les RFC. Ils décrivent et promeuvent les standards internet, en particulier tcp/ip</p>
+							<p>La structuration des groupes de travail se fait par l'intermédiaire de chartes. Un président est nommé (ou plusieurs co-présidents) pour chaque groupe de travail. Le but est une RFC sur un sujet fixé (temps réel, sécurité, smtp...). La participation est libre. L'adoption d'une RFC se fait à "un consensus approximatif"</p>
+						</small>
+					</section>
+					<section>
+						<h3>IETF</h3>
+						<small>
+							<p>Il existe un <em>très</em> grand nombre de RFCs.</p>
+							<ul>Elles décrivent la plupart des protocoles sur internet
+								<li>RFC 894 : ethernet II</li>
+								<li>RFC 791 : IP</li>
+								<li>RFC 821, 2821, 5321 : SMTP</li>
+								<li>RFC 2616, 7231 : HTTP 1.1</li>
+								<li>...</li>
+							</ul>
+						</small>
+					</section>
+					<section>
+						<h3>IEEE</h3>
+						<small>
+							<p>C'est un organisme de standardisation</p>
+							<ul>Cet institut apolitique a une présence mondiale, notament:
+								<li>aux USA : 5 centres dont la directions générale</li>
+								<li>En Asie : 3 centres Beijing et Shenzhen (Chine) et Bangalore (Inde)</li>
+								<li>Dans le Pacifique : Singapour et Tokyo</li>
+								<li>Russie : Moscou</li>
+								<li>Europe : Vienne</li>
+							</ul>
+						</small>
+					</section>
+					<section>
+						<h3>IEEE</h3>
+						<small>
+							<p>Actuellement, l'IEEE gère près de 1200 standards</p>
+							<p>La base de données d'articles techniques sur laquelle s'appuie ces standards contient près de 5 millions d'articles</p>
+							<ul>En ce qui nous concerne, l'IEEE a standardisé les couches 1 et 2 du modèles OSI avec les standards IEEE 802
+								<li>802 : standard général de base pour le déploiement de réseaux numériques locaux ou métropolitains à liaison filaire ou sans fil.</li>
+								<li>802.1 : gestion des réseaux</li>
+								<li>802.2 : description générale de la sous-couche Logical Link Control</li>
+								<li>802.3 : spécifications pour l'implémentation de réseaux numériques locaux à liaison filaire</li>
+								<li>802.10 : sécurisation des échanges pour les systèmes à liaison filaire ou sans fil (Token Ring, Ethernet, Wi-Fi, WiMAX)</li>
+							</ul>
+						</small>
+					</section>
+				</section>
+
+
+
+				<section data-transition="slide" data-background="./images/OS-intro.jpg" data-background-transition="zoom">
+					<h3>Ethernet</h3>
+					<small>
+						<p>Couche 2</p>
+					</small>
+				</section>
+
+				<section>
+					<section>
+						<h3>Trame ethernet</h3>
+						<small>
+							<p>La structure de la trame ethernet II, RFC 894</p>
+							<pre data-id="code"><code>
++------------------+-------------------------------------------------+
+| Bit sequence     |                  Frame Ethernet                 |
+| 101010101010...  |                 64 à 1518 octets                |
++------------------+----------+---------+------+--------------+------+
+| Preambule  | SFD | Dest Adr | Src Adr | type |     Data     | FCS  |
+|      8 o.        | 6 o.     | 6 o.    | 2 o. | 46 à 1500 o. | 4 o. |
++----------------- +----------+---------+------+--------------+------+
+
+SFD = Start Frame Delimiter
+type = information de contrôle
+FCS = Frame Check Sequence
+							</code></pre>
+							<p>Le préambule sert à la détection du début de trame par les interfaces</p>
+							<ul>Nous avons notament
+								<li>Type: contient des informations de contrôle</li>
+								<li>FCS: C'est un code permettant de détecter les erreurs de transmission. Dans la trame ethernet, il s'agit d'un code CRC</li>
+							</ul>
+							<p>Notez que le FCS protège des modifications mineures de trame. Il ne protège en rien des modifications volontaires et ne peut donc pas être utilisé pour sécuriser la trame</p>
+						</small>
+					</section>
+					<section>
+						<h3>Trame ethernet</h3>
+						<small>
+							<p>La structure de la trame ethernet, IEEE 802.3</p>
+							<pre data-id="code"><code>
++------------------+----------------------------------------------------------------------+
+| Bit sequence     |                             Frame Ethernet                           |
+| 101010101010...  |                            64 à 1518 octets                          |
++------------------+----------+---------+------+------+------+------+--------------+------+
+| Preambule  | SFD | Dest Adr | Src Adr | Long | DSAP | SSAP | Ctrl |     Data     | FCS  |
+|      8 o.        | 6 o.     | 6 o.    | 2 o. | 1 o. | 1 o. | 1 o. | 43 à 1497 o. | 4 o. |
++----------------- +----------+---------+------+------+------+------+--------------+------+
+
+SFD = Start Frame Delimiter
+DSAP = Destination Service Access Point
+SSAP = Source Service Access Point
+FCS = Frame Check Sequence
+							</code></pre>
+							<p>Le préambule sert à la détection du début de trame par les interfaces</p>
+							<ul>Nous avons notament
+								<li>DSAP: un code permettant d'identifier le protocole transporté: notament 06 pour TCP/IP ou F0 pour netbios</li>
+								<li>SSAP: code permettant d'identifiant le protocole emetteur: notament 7F pour IEEE 802.2 ou Logical Link Control</li>
+							</ul>
+						</small>
+					</section>
+					<section data-auto-animate id="fragments">
+						<h3>Détection de trames</h3>
+						<small>
+							<p>Alors, trame IETF ou IEEE, RFC 894 ou 802.3 ?</p>
+							<pre data-id="code"><code>
+        +------------------+----------------------------------------------------------------------+
+        | Bit sequence     |                            Frame Ethernet                            |
+        | 101010101010...  |                           64 à 1518 octets                           |
+        +------------------+----------+---------+------+-----------------------------------+------+
+trame   | Preambule  | SFD | Dest Adr | Src Adr | type |               Data                | FCS  |
+RFC 894 |      8 o.        | 6 o.     | 6 o.    | 2 o. |           46 à 1500 o.            | 4 o. |
+        +------------------+----------+---------+------+------+------+------+--------------+------+
+trame   | Preambule  | SFD | Dest Adr | Src Adr | Long | DSAP | SSAP | Ctrl |     Data     | FCS  |
+802.3   |      8 o.        | 6 o.     | 6 o.    | 2 o. | 1 o. | 1 o. | 1 o. | 43 à 1497 o. | 4 o. |
+        +----------------- +----------+---------+------+------+------+------+--------------+------+
+							</code></pre>
+							<span class="fragment">
+								<ul>On va faire la distinction sur les octets 21 et 22 (on parle aussi des 13eme et 14eme octet car on compte rarement le préambule)
+									<li>Les valeurs de 0 à 1500 indiquent une longueur. Il s'agira donc d'une trame 802.3</li>
+									<li>Les valeurs à partir de 1536 (0x0600) indiquent un type. Il s'agira donc d'une trame ethernet II</li>
+									<li>Les valeurs de 1501 à 1535 sont interdites</li>
+								</ul>
+							</span>
+						</small>
+					</section>
+					<section data-auto-animate>
+						<h3>Détection de trames</h3>
+						<small>
+							<p>Alors, trame IETF ou IEEE, RFC 894 ou 802.3 ?</p>
+							<pre data-id="code"><code>
+        +------------------+----------------------------------------------------------------------+
+        | Bit sequence     |                            Frame Ethernet                            |
+        | 101010101010...  |                           64 à 1518 octets                           |
+        +------------------+----------+---------+------+-----------------------------------+------+
+trame   | Preambule  | SFD | Dest Adr | Src Adr | type |               Data                | FCS  |
+RFC 894 |      8 o.        | 6 o.     | 6 o.    | 2 o. |           46 à 1500 o.            | 4 o. |
+        +------------------+----------+---------+------+------+------+------+--------------+------+
+trame   | Preambule  | SFD | Dest Adr | Src Adr | Long | DSAP | SSAP | Ctrl |     Data     | FCS  |
+802.3   |      8 o.        | 6 o.     | 6 o.    | 2 o. | 1 o. | 1 o. | 1 o. | 43 à 1497 o. | 4 o. |
+        +----------------- +----------+---------+------+------+------+------+--------------+------+
+							</code></pre>
+							<span>
+								<ul>
+									<li>Les octets DSAP, SSAP et Ctrl fond partie de la sous-couche LLC</li>
+									<li>LLC permet de gérer le bourrage et transporte de l'information pour la couche MAC et PHY</li>
+									<li>Sur la trame Ethernet II, ce concept n'existe pas. Le bourrage sera pris en compte par la couche 3</li>
+								</ul>
+							</span>
+						</small>
+					</section>
+					<section>
+						<h3>EtherType</h3>
+						<small>
+							<p>Dans le cas d'utilisation d'une trame ethernet II</p>
+							<ul>Quelques exemples type:
+								<li>0x0800 : IPv4</li>
+								<li>0x0806 : ARP</li>
+								<li>0x809b : AppleTalk (ethertalk)</li>
+								<li>0x8100 : VLAN TAG frame (IEEE 802.1q et 802.1aq)</li>
+								<li>0x8847 : MPLS unicast</li>
+								<li>0x8906 : Fibre Channel over Ethernet (FCoE)</li>
+							</ul>
+						</small>
+					</section>
+					<section>
+						<h3>diffusion et broadcast</h3>
+						<small>
+							<ul>
+								<li>Dans un réseau physique, la circulation des trames se fait par diffusion</li>
+								<ul>
+									<li>Un diffuseur (terminal, ordinateur...) A envoie un paquet dont la destination MAC est connue</li>
+									<li>Le concentrateur ou le commutateur qui ne connais pas l'adresse de destination et qui reçoit le paquet le rediffuse sur toutes ses interfaces</li>
+									<li>Le terminal a qui est destiné le paquet répond en renvoyant une trame vers le diffuseur A</li>
+									<li>Le concentrateur rediffuse sur toutes ses interfaces, le commutateur seulement sur celle sur laquelle est connecté le diffuseur A</li>
+								</ul>
+								<li>Le broadcast est un envoi sur une adresse MAC particulière à laquelle répondent tous les terminaux. Il est utilisé dans le protocole ARP, quand un terminal recherche l'emplacement physique d'un autre terminal</li>
+								<ul>
+									<li>A qui est l'adresse IP xxx.xxx.xxx.xxx ? envoyé dans un paquet ethernet à destination de ff:ff:ff:ff:ff:ff</li>
+									<li>Le paquet est broadcasté (distribué) sur tous les terminaux.</li>
+									<li>Le terminal concerné répond: c'est moi (adresse MAC de:02:86:fa:67:a5)</li>
+									<li>Les tables de routage des commutateurs et du diffuseur sont mises à jour</li>
+								</ul>
+							</ul>
+						</small>
+					</section>
+					<section>
+						<h3>Notion de réseau physique</h3>
+						<small>
+							<p>Un réseau physique est l'ensemble des périphériques et des services associés au réseau</p>
+							<ul>Il est composé
+								<li>des cables ou des ondes qui forment l'infrastructure physique</li>
+								<li>des commutateurs, concentrateurs et ponts qui routent les trames</li>
+								<li>des terminaux qui sont connectés au réseau</li>
+							</ul>
+							<p>Le réseau physique basé sur ethernet s'appelle un domaine de diffusion ethernet</p>
+						</small>
+					</section>
+					<section>
+						<h3>LAN et vLAN</h3>
+						<small>
+							<p>Le réseau physique en diffusion est assimilable à une faille de sécurité à lui tout seul: chaque terminal connecté au réseau reçoit l'ensemble des trames du réseau</p>
+							<p>De plus, pour un réseau de <em>n</em> machines, l'émission d'une trame atteint <em>n-1</em> machine. La bande passante totale disponible sur le réseau est donc divisé par <em>n-1</em>. La taille maximal acceptable pour un réseau de ce type est de l'ordre d'une dizaine de machine</p>
+							<p>Le fait de remplacer les concentrateur par des commutateurs permet de monter jusqu'à une centaine de machine grace à l'économie faite sur les diffusions.</p>
+							<p>Pour monter au dessus de ce nombre de machine, on va utiliser des vLAN (Virtual LAN). Les paquets ethernet vont être tagué par un numéro de vLAN. Le domaine de diffusion sera lié au vLAN</p>
+							<p>Ainsi, une machine sur le vLAN 1 ne pourra pas communiquer avec une machine sur le vLAN 10, sauf à passer par un routeur</p>
+						</small>
+					</section>
+					<section data-auto-animate>
+						<h3>La trame ethernet avec TAG vLAN 802.1q</h3>
+						<small>
+							<p>Notez qu'il existe la même pour ethernet II (RFC 2674)</p>
+							<pre data-id="code"><code>
++------------------+----------------------------------------------------------------------------+
+| Bit sequence     |                               Frame Ethernet                               |
+| 101010101010...  |                              68 à 1522 octets                              |
++------------------+----------+---------+------+-----+------+------+------+--------------+------+
+| Preambule  | SFD | Dest Adr | Src Adr | TAG  |Long | DSAP | SSAP | Ctrl |     Data     | FCS  |
+|      8 o.        | 6 o.     | 6 o.    | 4 o. |2 o. | 1 o. | 1 o. | 1 o. | 43 à 1497 o. | 4 o. |
++----------------- +----------+---------+------+-----+------+------+------+--------------+------+
+| Preambule  | SFD | Dest Adr | Src Adr | TAG  |type |                Data               | FCS  |
+|      8 o.        | 6 o.     | 6 o.    | 4 o. |2 o. |            46 à 1500 o.           | 4 o. |
++----------------- +----------+---------+------+-----+------+------+------+--------------+------+
+
+		   1   15 16    32
+      +------+-------+
+TAG = | TPID |  TCI  |
+      +------+-------+
+							</code></pre>
+							<ul>
+								<li>TPID permet d'identifier le protocole de la balise. Dans le cas de 802.1q, il s'agit de la valeur 0x8100</li>
+							</ul>
+						</small>
+					</section>
+					<section data-auto-animate>
+						<h3>La trame ethernet avec TAG vLAN 802.1q</h3>
+						<small>
+							<p>Notez qu'il existe la même pour ethernet II (RFC 2674)</p>
+							<pre data-id="code"><code>
++------------------+----------------------------------------------------------------------------+
+| Bit sequence     |                               Frame Ethernet                               |
+| 101010101010...  |                              68 à 1522 octets                              |
++------------------+----------+---------+------+-----+------+------+------+--------------+------+
+| Preambule  | SFD | Dest Adr | Src Adr | TAG  |Long | DSAP | SSAP | Ctrl |     Data     | FCS  |
+|      8 o.        | 6 o.     | 6 o.    | 4 o. |2 o. | 1 o. | 1 o. | 1 o. | 43 à 1497 o. | 4 o. |
++----------------- +----------+---------+------+-----+------+------+------+--------------+------+
+| Preambule  | SFD | Dest Adr | Src Adr | TAG  |type |                Data               | FCS  |
+|      8 o.        | 6 o.     | 6 o.    | 4 o. |2 o. |            46 à 1500 o.           | 4 o. |
++----------------- +----------+---------+------+-----+------+------+------+--------------+------+
+
+		   1   15 16    32
+      +------+-------+
+TAG = | TPID |  TCI  |
+      +------+-------+
+							</code></pre>
+							<ul>
+								<li>le TCI est découpé en 3 champs:
+									<ul>
+										<li>Priorité : 3 bits. Ce champs sert à définir la priorié d'un vlan par rapport à un autre</li>
+										<li>CFI : 1 bit. Ce champs est fixé à 0 en ethernet</li>
+										<li>vLAN id: 12 bits (soit 4096 valeurs). Numéro d'identification du vLAN.</li>
+									</ul>
+								</li>
+							</ul>
+						</small>
+					</section>
+					<section>
+						<h3>Le TAG du vLAN</h3>
+						<small>
+							<p>Le TAG est construit avec un TPID 0x8100. Ce magic number évite de confondre une trame marquée avec une trame ethernet II.</p>
+							<p>Le CFI (1 bit) assure la compatibilité entre les adresse MAC ethernet et Token Ring. S'il est à 1 sur une interface, la trame ne sera pas propagée (interface untagged)</p>
+							<ul>Le vLAN id est codé sur 12 bits, soit 4096 valeurs. Sont réservées les valeurs:
+								<li>0 : signifie qu'il n'y a pas de vLAN</li>
+								<li>4095 : réservé</li>
+								<li>1002 à 1005 : pour les protocoles de niveau 2 différents d'ethernet</li>
+							</ul>
+						</small>
+					</section>
+					<section>
+						<h3>802.1X</h3>
+						<small>
+							<p>Les réseaux doivent parfois être physiquement protégé. IEEE a écrit un protocole permettant de controler l'ouverture ou la fermeture des ports d'un firewall.</p>
+							<p>Le principe est d'authentifier l'équipement qui se connecte et de l'autoriser (ou pas) à communiquer.</p>
+							<ul>
+								<li>Si l'authentification fonctionne, le port est ouvert normalement.</li>
+								<li>Si l'authentification échoue, le port ne laisse pas passer, ni dans un sens ni dans l'autre, les trames ethernet.</li>
+							</ul>
+							<p>Le protocole le plus souvent utilisé pour implémenter 802.1x est RADIUS. Mais on peut aussi utiliser des serveurs TACAS.</p>
+							<p>Attention quand même, cette protection est perméable à une attaque de type MITM.</p>
+						</small>
+					</section>
+					<section>
+						<h3>Broadcast et multicast sur couche 2</h3>
+						<small>
+							<p>Des adresses MAC sont réservées à ces deux usages</p>
+							<ul>
+								<li>L'adresse ff:ff:ff:ff:ff:ff est l'adresse de broadcast. Elle est utilisé lorsqu'il s'agit de trouver l'emplacement physique d'un terminal</li>
+								<li>Les adresses 01:00:5e:00:00:00 à 01:00:5e:7f:ff:ff sont des adresse de multicast (25 bits de prefix). Il reste donc 23 bits d'adresses pour mapper les groupes multicast de niveau 3</li>
+							</ul>
+						</small>
+					</section>
+				</section>
+
+				<section data-transition="slide" data-background="./images/OS-intro.jpg" data-background-transition="zoom">
+					<h3>La sécurisation de la couche 2</h3>
+					<p>du moins, fonctionnellement</p>
+				</section>
+
+
+
+				<section>
+					<section>
+						<h3>Le problème</h3>
+						<small>
+							<p>Le modèle de diffusion d'ethernet pose des problèmes de sécurité</p>
+							<ul>On peut citer en vrac:
+								<li>l'inondation</li>
+								<li>La redondance</li>
+								<li>La diffusion des tables de routages</li>
+								<li>la sécurité des données</li>
+								<li>la gestion de la bande passante dans le cas d'un grand nombre de terminaux</li>
+							</ul>
+						</small>
+					</section>
+					<section>
+						<h3>l'inondation</h3>
+						<small>
+							<p>Sur un domaine de diffusion, s'il existe une boucle, les trames ethernet qui entrent dans le concentrateur ou le commutateur et qui sont diffusées sur toutes ses interfaces (soit mécaniquement sur les concentrateur, soit les adresses de broadcast sur les commutateurs) finissent par y rerentrer</p>
+							<p>Les trames circulent alors le long de la boucle en prenant la totalité de la bande passante. Le réseau s'arrête de fonctionner</p>
+							<p>Afin de pallier ce problème, un certain nombre de protocole ont été défini. Ces protocoles servent à identifier les boucles et à les couper. Les chemins supplémentaires, partiellement condamnés peuvent alors servir à faire de la redondance de chemin sur la couche 2</p>
+						</small>
+					</section>
+					<section>
+						<h3>STP (Spanning Tree Protocol)</h3>
+						<small>
+							<p>Le STP est un protocole de couche 2, définit par l'IEEE dans la norme 802.1d</p>
+							<p>Il transporte les BPDU (Bridge Protocol Data Unit) qui sont les informations de topologie du réseau et qui sont émise par défaut toutes les 2 secondes (Hello)</p>
+							<p>Il permet de condamner certaines interfaces sur les commutateurs et les ponts</p>
+							<p>Son principe de fonctionnement est de déterminer un arbre (topologie sans boucle) recouvrant le réseau</p>
+						</small>
+					</section>
+					<section>
+						<h3>STP - fonctionnement</h3>
+						<small>
+							<ol>
+								<li>élection du commutateur racine: on choisit le commutateur ayant le plus petit bridge ID. Le bridge ID est paramétrable par l'administrateur.</li>
+								<li>Chaque commutateur et pont évalue alors le coût pour atteindre la racine sur chaque segment (chaque interface). L'interface connecté au segment au coût le plus faible devient <span style="color:#FF4400">racine</span></li>
+								<li>On évalue ensuite les chemins par segment. Pour chaque segment réseau, on évalue le coût pour atteindre la racine. Le port du commutateur connecté au segment considéré pour le coût le plus faible devient <span style="color:#00aa22">désigné</span></li>
+								<li>Les ports qui ne sont ni racines, ni désignés, sont bloqués</li>
+								<li>Les ports bloqués continuent de recevoir les paquets BPDU mais n'en emmettent plus</li>
+								<li>En cas de changement de topologie, on recalcule un nouvel arbre</li>
+							</ol>
+						</small>
+					</section>
+					<section>
+						<h3>Mode et ports</h3>
+						<small>
+							<p>Sur les commutateurs, les ports sont dans les états:
+							<ul>
+								<li>listening : le port reçoit les paquets BPDU et détermine la topologie du réseau</li>
+								<li>learning : le commutateur construit les tables de routage</li>
+								<li>forwarding : mode normal de fonctionnement: les paquets sont envoyés et reçus</li>
+								<li>blocking : port provoquant une boucle: aucune information n'est reçue ni envoyée (sauf BPDU en reception) mais le port peut passer en forwarding</li>
+								<li>disabled : port administrativement coupé</li>
+							</ul>
+							<p>Les BPDU sont envoyés toutes les 2 secondes pour déterminer les changements de topologie.</p>
+							<p>Un port met 15 à 30 secondes pour passer de l'état <em>blocking</em> à l'état <em>forwarding</em>. La convergence du réseau s'obtient donc en 30 à 50 secondes.</p>
+							<p>Ce délai trop important et l'impossibilité de tenir compte des vLAN explique l'émergence d'un autres protocoles du même type: RSTP</p>
+						</small>
+					</section>
+					<section>
+						<h3>RSTP</h3>
+						<small>
+							<p>Le protocole RSTP (Rapid Spanning Tree Protocol) est définie dans la norme 802.1d-2004</p>
+							<p>Le temps de convergence du protocole RSTP est de 3 fois le délai Hello, soit 6 secondes par défaut</p>
+							<ul>Le principe est le même que pour le protocole STP, mais à l'état des ports, on superpose un rôle:
+								<li>root: c'est le port qui mène à la racine pour le moindre coût</li>
+								<li>designated: c'est le port connecté à un segment par la route au moindre coût</li>
+								<li>Alternate: c'est un port alternatif permettant d'atteindre la racine</li>
+								<li>Backup: c'est un port alternatif permettant d'atteindre un segment</li>
+							</ul>
+						</small>
+					</section>
+					<section>
+						<h3>RSTP - amélioration</h3>
+						<small>
+							<ul>Par rapport au STP, le protocole RSTP apporte les amélioration suivante:
+								<li>écoute sur un port bloqué
+									<ul>
+										<li>Si le port est un port alternate, il peut passer immédiatement en forwarding si la route la plus courte est coupée</li>
+										<li>Si le port est en backup (edge ports), il peut être immédiatement ouvert si la route du segment considéré est coupée</li>
+									</ul>
+								</li>
+								<li>écoute les messages PBDU de la racine
+									<ul>
+										<li>La racine emet des PBDU (annonces) toutes les 2 secondes</li>
+										<li>Les ponts tiennent compte de ces informations et sont capables de communiquer leur changement d'état de port aux ponts voisins. Les changements d'état peuvent alors être automatiques sans risque de boucle, et donc sans passage par l'état learning</li>
+									</ul>
+								</li>
+							</ul>
+						</small>
+					</section>
+					<section>
+						<h3>PVST et MSTP</h3>
+						<small>
+							<p>STP et RSTP ne tiennent aucun compte des vLAN. Un outil de contrôle par vLAN était donc nécessaire</p>
+							<p>PVST est le protocole propriétaire de cisco permettant le contrôle par vLAN</p>
+							<p>MSTP est le protocole de l'IEEE (norme 802.1s) puis inclus dans la norme 802.1q-2003</p>
+							<p>MSTP est une extension de RSTP par vLAN. Les deux protocoles sont compatibles: le format des PBDU ne change pas. Contrairement à PVST, il n'est pas nécessaire d'avoir une instance par vLAN, les vLAN peuvent être groupés</p>
+						</small>
+					</section>
+					<section>
+						<h3>La gestion de STP</h3>
+						<small>
+							<p>La gestion de STP et dérivés peut être complexe dans les grands réseaux. En mai 2012, l'IEEE approuve le standard 802.1aq, connu et documenté sous le nom SPB ou Shortest Path Bridge</p>
+							<p>SPB permet à tous les liens d'être actifs à travers des chemins à coûts identiques, ce qui permet la redondance mais auss l'équilibrage de charge. Le SPB offre en plus une convergence plus rapide</p>
+							<p>SPB permet par ailleurs la gestion de réseau maillé beaucoup plus grand en augmentant les bandes passantes</p>
+						</small>
+					</section>
+					<section>
+						<h3>LACP : le multiport</h3>
+						<small>
+							<p>Le LACP (norme 802.3ad, Link Aggregation Control Protocol) est un protocole de niveau 2 sur la couche OSI qui permet de regrouper plusieurs ports physiques en une seule voie logique.</p>
+							<p>Ce protocole permet à la fois une tolérance aux pannes et une répartition de charge</p>
+							<p>Chaque flux passera toujours par le même port pour éviter les problèmes de réordonnancements</p>
+							<p>Le choix du port de sortie se fait sur l'adresse MAC, l'adresse IP et le port de la couche 4</p>
+						</small>
+					</section>
+				</section>
+
+
+
+				<section data-transition="slide" data-background="./images/OS-intro.jpg" data-background-transition="zoom">
+					<h3>Internet</h3>
+					<p>En IPv4</p>
+				</section>
+
+				<section>
+					<section>
+						<h3>Réseau et machine</h3>
+						<small>
+							<p>L'adresse d'une machine se compose toujours</p>
+							<ul>
+								<li>D'une adresse composée de 4 octets de 8 bits non signé (soit, de 0 à 255 inclus) séparés par un '.'<br>
+									exemple: 192.168.0.234</li>
+								<li>D'un masque de réseau (ou de sous réseau) composé de 4 octets de 8 bits dont les règles de constructions sont:
+									<ul>
+										<li>Il est constitué d'une suite de 1 suivi d'une suite de 0</li>
+										<li>Il permet de distinguer la partie adresse de réseau de la partie machine</li>
+										<li>Il est parfois noté (notation CIDR) d'un caractère '/' suivi d'un nombre correspondant au nombre de 1 du masque<br>
+											ex: 192.168.222.125, masque 255.255.255.0 peut être noté 192.168.222.125/24</li>
+										<li>Dans un réseau donné, une adresse ne peut appartenir qu'à une machine</li>
+									</ul>
+								</li>
+							</ul>
+							<p>À noter: vous entendrez peut-être parler de "classe" de réseau (classe A, B ou C). Cette notion est désormais obsolète</p>
+						</small>
+					</section>
+					<section>
+						<h3>Réseau et machine</h3>
+						<small>
+							<p>Selon l'exemple précédent, en binaire:</p>
+							<pre data-id="code">
+   192.168.222.125 = 11000000 . 10101000 . 11011110 . 01111101
+   255.255.255.0   = 11111111 . 11111111 . 11111111 . 00000000
+                     -----------------------------------------
+adr réseau (AND)     11000000 . 10101000 . 11011110 . 00000000 (soit 192.168.222.0)
+adr machine          00000000 . 00000000 . 00000000 . 01111101 (soit 0.0.0.125)
+							</pre>
+							<ul>Il y a deux adresses réservées dans un réseau
+								<li>La première adresse (dans l'exemple) 192.168.222.0: c'est l'adresse du réseau</li>
+								<li>La dernière adresse (dans l'exemple) 192.168.222.255: c'est l'adresse de broadcast</li>
+								<li>Les machines peuvent avoir toutes les autres adresses (soit 254 adresses disponibles ici)</li>
+							</ul>
+							<p>Une adresse est donc composée d'une partie réseau et d'une partie machine</p>
+							<p>Dans l'adresse <span style="color:#00AA22">192.168.222.</span><span style="color:#FF4400">125</span>/24, on a en vert la partie réseau, en orange, la partie machine</p>
+						</small>
+					</section>
+					<section>
+						<h3>RFC 1918 (adressage privé)</h3>
+						<small>
+							<p>La RFC 1918 défini les adresses utilisables dans les réseaux privés (LAN)</p>
+							<table>
+								<tr>
+									<td>Préfix</td><td>Plage IP</td><td>Nombre d'adresse</td><td>exemples</td>
+								</tr>
+								<tr>
+									<td>10.0.0.0/8</td><td>10.0.0.0 - 10.255.255.255</td><td>16 777 216</td><td>10.32.27.48/24</td>
+								</tr>
+								<tr>
+									<td>172.16.0.0/12</td><td>172.16.0.0 - 172.31.255.255</td><td>1 048 576</td><td>172.23.32.56/24</td>
+								</tr>
+								<tr>
+									<td>192.168.0.0/16</td><td>192.168.0.0 - 192.168.255.255</td><td>65 536</td><td>192.168.1.32/24</td>
+								</tr>
+							</table>
+							<p style="color:red">Ces adresses ne sont pas routables (transportables) sur internet</p>
+						</small>
+					</section>
+					<section>
+						<h3>RFC 6890 (adressage réservé)</h3>
+						<small>
+							<table>
+								<tr>
+									<td>Préfix</td><td>Rôle</td>
+								</tr>
+								<tr>
+									<td>0.0.0.0/8</td><td>Réservé pour les adresses sources du réseau</td>
+								</tr>
+								<tr>
+									<td>127.0.0.0/8</td><td>Réservé pour la boucle locale</td>
+								</tr>
+								<tr>
+									<td>169.254.0.0/16</td><td>Réservé pour la boucle locale</td>
+								</tr>
+								<tr>
+									<td>192.0.0.0/24</td><td>Réservé par l'IANA pour l'IETF</td>
+								</tr>
+								<tr>
+									<td>192.0.2.0/24</td><td>Réservé TEST-NET-1, documentation</td>
+								</tr>
+								<tr>
+									<td>192.51.100.0/24</td><td>Réservé TEST-NET-2, documentation</td>
+								</tr>
+								<tr>
+									<td>203.0.113.0/24</td><td>Réservé TEST-NET-3, documentation</td>
+								</tr>
+								<tr>
+									<td>100.64.0.0/10</td><td>Réservé Carrier-Grade NAT</td>
+								</tr>
+								<tr>
+									<td>224.0.0.0/4</td><td>Réservé multicast</td>
+								</tr>
+								<tr>
+									<td>240.0.0.0/4</td><td>Réservé pour usage futur</td>
+								</tr>
+								<tr>
+									<td>255.255.255.255/32</td><td>limited broadcast</td>
+								</tr>
+							</table>
+							<p style="color:red">Ces adresses ne sont pas routables (transportables) sur internet</p>
+						</small>
+					</section>
+					<section>
+						<h3>Le Paquet IP</h3>
+						<small>
+							<p>Le paquet IP doit assurer un transport d'information à travers un réseau à destination d'une adresse logique</p>
+							<pre data-id="code"><code>
+0        3 4        7 8               15 16  18 19               32
++---------+----------+------------------+--------------------------+
+| version | Longueur |  Type de service |       Longueur total     |
+| ( = 4 ) | en-tête  |     (TOS)        |         (en octets)      |
++---------+----------+------------------+-+-+-+--------------------|
+|               Identification          |0|D|M|   Fragment offset  |
+|                                       | |F|F|                    |
++--------------------+------------------+-+-+-+--------------------+
+|    Durée de vie    |     Protocole    |   Checksum de l'entête   |
+|      (TTL)         |    transporté    |                          |
++--------------------+------------------+--------------------------+
+|                      Adresse IP Source                           |
++------------------------------------------------------------------+
+|                   Adresse IP Destination                         |
++------------------------------------------------------------------|
+|                          Options                                 |
+|                                                      et bourrage |
++------------------------------------------------------------------+
+|                           Payload                                |
++------------------------------------------------------------------+
+							</code></pre>
+						</small>
+					</section>
+					<section>
+						<h3>Adressage statique vs dynamique</h3>
+						<small>
+							<ul>
+								<li>L'adressage statique consiste à paramétrer une adresse à chaque machine</li>
+								<li>L'adressage dynamique consiste à faire appel à un serveur pour attribuer une adresse dans un réseau donné. Ce serveur est appelé serveur DHCP</li>
+							</ul>
+							<div class="r-hstack center-justify" style="margin:40px">
+								<div style:"margin:20px">
+									<ul><span style="color:#FF4400">Réseaux statiques</span>
+										<li>Paramétrage fin (chaque machine a une adresse connue)</li>
+										<li>Administration lourde</li>
+										<li>Facilité d'implémentation des services (DNS, entre autre)</li>
+									</ul>
+								</div>
+								<div style="margin:20px">
+									<ul><span style="color:#00AA22">Réseau dynamique</span>
+										<li>Paramétrage automatique, sans intervention de l'utilisateur</li>
+										<li>Administration facilité</li>
+										<li>Paramétrage des services plus complexes</li>
+									</ul>
+								</div>
+							</div>
+						</small>
+					</section>
+					<section>
+						<h3>Routage</h3>
+						<small>
+							<p>Le routage consiste à trouver une route vers une adresse logique (de réseau ou de machine) donnée</p>
+							<p>Il s'agit donc de sauter de réseau en réseau à travers des passerelles (Gateway) qui sont censée connaître le chemin vers la destination</p>
+							<img src="./images/Diagramme routage.svg" height="400px">
+							<p><span style="color:#FF4400">Le routage ne change pas le paquet IP, seulement la trame ethernet.</span></p>
+						</small>
+					</section>
+					<section>
+						<h3>Routage</h3>
+						<small>
+							<p>Il existe 2 types de routage au niveau IP: le routage statique et le routage dynamique</p>
+							<ul>
+								<li>Le routage statique
+									<ul>
+										<li>Chaque machine doit connaître l'ensemble des routes permettant d'accéder aux autres réseaux...</li>
+										<li>à moins de connaître un routeur qui connait ces mêmes routes.</li>
+										<li>La configuration est lourde...</li>
+										<li>mais facile: les erreurs sont en générale peu grave et vite repérées.</li>
+									</ul>
+								</li>
+								<li>Le routage dynamique
+									<ul>
+										<li>Il fait appel à un/des protocole(s) secondaire(s).</li>
+										<li>La configuration peut être complexe, voire très complexe.</li>
+										<li>Les erreurs de config ont souvent des répercussions catastrophiques.</li>
+										<li>Avantage: il suffit de brancher un machine pour qu'elle ait immédiatement accès à tous les réseaux</li>
+										<li>Le routage peut être dynamique dans un but de redondance ou de répartition de charge</li>
+									</ul>
+								</li>
+							</ul>
+						</small>
+					</section>
+					<section>
+						<h3>NAT, SAT, DAT</h3>
+						<small>
+							<p>Nat = Network Adress Translation: il s'agit d'une technique utilisée sur les routeurs permettant à un terminal dans un réseau privé de communiquer avec un réseau public (rappel: les adresses privées ne peuvent pas circuler sur internet). La technique consiste à transformer l'une des adresses (soit celle d'émission, soit celle de réception).</p>
+							<p>Le <span style="color:#FF4400">SAT</span> est le Source Address Translation. Il est utilisé dans le cas de la sortie d'un LAN</p>
+							<p>Le <span style="color:#00AA22">DAT</span> est le Destination Address Translation. Il est utilisé dans le cas de l'entrée dans un LAN</p>
+						</small>
+					</section>
+					<section>
+						<h3>SAT et DAT: le firewall a état</h3>
+						<small>
+							<ul>
+								<li>Un firewall est un dispositif réseau, généralement de type routeur, permettant l'interconnexion de plusieurs réseaux</li>
+								<li>Son rôle est de gérer (autoriser, interdire, garantir une qualité de service) les transferts de paquets d'un réseau à l'autre</li>
+								<li>Il travaille aujourd'hui sur les couches 2 (ethernet: établissement des VLAN), 3 (IP: notament routage) et 4 (TCP: notament port forwarding) au moins, parfois jusqu'à la couche 7</li>
+								<li>En cas de NAT, le firewall suit les connexions. Il est capable de reconnaitre plusieurs états: établie, en cours d'établissement, en cours de terminaison</li>
+							</ul>
+							<pre data-id="code"><code>
+                            +------------routeur--------------+
+                            |              SAT                |
++---------------------+     |     +----------------------+    |
+| paquet IP           |     |     | paquet IP SAT        |    |
+| adr S = 192.168.2.3 | --------- | adr S = 212.95.67.32 | ------- vers INTERNET
+| adr D = 8.8.8.8     |     |     | adr D = 8.8.8.8      |    |
++---------------------+     |     +----------------------+    |
+                            +---------------------------------+
+							</code></pre>
+						</small>
+					</section>
+				</section>
+
+
+
+
+				<section data-transition="slide" data-background="./images/OS-intro.jpg" data-background-transition="zoom">
+					<h3>Les protocoles de Transport (tcp, udp)</h3>
+				</section>
+
+				<section>
+					<section>
+						<h3>UDP</h3>
+						<small>
+							<p>Fire and Forget</p>
+							<p>Le protocole UDP est utilisé dans les communication non connectée et dans lesquelles le contrôle de flux peut se faire au niveau applicatif</p>
+							<p>Il est extrêmement simple</p>
+							<pre data-id="code"><code>
+ 1          16 17        32 33      48 49      64 65                        n
++-------------+------------+----------+----------+---------------------------+
+| port source | port cible | longueur | Checksum | Données (taille variable) |
++-------------+------------+----------+----------+---------------------------+
+							</code></pre>
+							<p>Le segment est ensuite encapsulé dans un paquet IP</p>
+							<p>UDP est notament utilisé pour interroger les DNS, obtenir une adresse par DHCP, ou pour les montages réseaux NFS</p>
+						</small>
+					</section>
+					<section>
+						<h3>TCP</h3>
+						<small>
+							<p>Le protocole TCP est utilisé pour les communications connectées. Pour établir la connexion, il fait appel à la méthode du handshaking à 3 temps</p>
+							<ul>Lors de l'échange initial
+								<li>Un client demande un serveur. Il lui envoie une demande SYN avec son numéro d'acquittement N</li>
+								<li>Le serveur reçois la demande et renvoie un signal SYN/ACK avec le numéro d'acquittement du client + 1 (N+1) et son propre numéro d'acquittement M</li>
+								<li>Le client reçois le signal SYN/ACK et renvoie un signal ACK avec son numéro d'acquitement (N+1) et celui du serveur augmenté de 1 (M+1)</li>
+							</ul>
+							<p>La communication est alors établie. Par la suite, chaque échange sera contrôlé par numéro d'acquitement et par somme de contrôle. TCP est capable de retransmettre alors un segment qui n'aurait pas été reçu (il n'aurait pas été acquité)</p>
+						</small>
+					</section>
+					<section>
+						<h3>TCP - détails</h3>
+						<small>
+							<img src="./images/tcp-init-connect.svg" width="80%" />
+							<p>Par la suite, à chaque transfert de segment, le cookie est augmenté du nombre de segment envoyés. Le terminal 1 (celui qui a initié la communication) augmente le nombre m, le deuxième terminal, le nombre n</p>
+						</small>
+					</section>
+					<section>
+						<h3>TCP</h3>
+						<small>
+							<p>La fermeture de connexion se fait en 4 temps, soit 2 terminaux A et B:</p>
+							<ul>
+								<li>A demande une fin de connexion. Il envoie le signal FIN</li>
+								<li>B reçoit la demande et répond avec un ACK. La connexion est alors à moitié fermée. B peut néanmoins continuer à communiquer.</li>
+								<li>Quand B a fini, il envoie le signal FIN</li>
+								<li>A répond avec un ACK</li>
+							</ul>
+							<p>La connexion est alors complètement fermée</p>
+						</small>
+					</section>
+					<section>
+						<h3>TCP</h3>
+						<small>
+							<p>Par ailleurs, TCP possède plusieurs systèmes de contrôle de flux. Chaque segment contient la taille disponible dans le tampon de réception de l'hôte ce qui permet d'adapter la taille de la fenêtre d'émission (en clair, la vitesse d'émission)</p>
+							<p>Enfin, TCP prévient les engorgements (congestions) réseau en adaptant son débit en fonction du nombre de segments perdus</p>
+							<p>Les ports TCP les plus connu : 22 (ssh), 80 (http), 110 (pop)...</p>
+							<p style="color:#FF4400">Attention, ne confondez pas mode connecté TCP, mode connecté de session, mode connecté applicatif</p>
+						</small>
+					</section>
+					<section>
+						<h3>TCP - zoom sur la fenêtre</h3>
+						<small>
+							<p>TCP sait adapter sa vitesse de transmission en fonction du réseau ou des capacités de l'émetteur ou du récepteur</p>
+							<p>Il prend en compte pour cela la taille disponible des tampons</p>
+							<p>Le principe consiste pour l'émetteur à remplir le tampon du récepteur puis à attendre les acquittements. A chaque acquittement qui arrive, TCP peut envoyer un autre fragment</p>
+							<p>Lorsqu'un acquittement n'arrive pas, c'est que le récepteur ne l'a pas eu. C'est donc le réseau qui est congestionné.</p>
+							<p>Pour éviter cette congestion, TCP utilise le principe du <em>low start</em>. Quelque soient les tailles de fenêtres de réception et d'émission, il commence par envoyer un paquet, puis attend l'acquittement. Si ça marche, il double le nombre de paquets, et ainsi de suite jusqu'à ce qu'on ait atteint la taille de fenêtre optimale</p>
+						</small>
+					</section>
+					<section>
+						<h3>TCP - zoom sur la fenêtre</h3>
+						<small>
+							<p>Cette gestion de la fenêtre pour fixer la vitesse de transmission fonctionne très bien dans un LAN. En revanche, elle marche mal dans un WAN.</p>
+							<p>À l'heure du cloud, il n'est pas rare que la communication se fasse entre deux terminaux à plus de 1000km de distance. Dans ce cas, un ping aura un délai moyen de 25 à 30ms. Si on considère une fenêtre de taille standard (64ko) cela signifie qu'il faut attendre 25ms après chaque envoie de 65 535 octets, soit un débit de 21Mbit/s, y compris sur des liens gigabits.</p>
+							<p>Afin de dépasser cette limite, on peut augmenter dynamiquement la taille de la fenêtre, par exemple jusqu'à 1Go. La vitesse maximum permet alors la saturation d'un lien 10Gbit/s.</p>
+						</small>
+					</section>
+					<section>
+						<h3>ICMP</h3>
+						<small>
+							<p>ICMP : Internet Control Message Protocol. C'est le protocol qui permet de contrôler le bon fonctionnement d'un réseau IP. Son fonctionnement peut se résumer à celui de transmetteur de code d'erreur...</p>
+							<pre data-id="code"><code>
+ 1    8 9   16 17      32 33         48 49                64
++------+------+----------+-------------+--------------------+
+| Type | Code | Checksum | Identifiant | Numéro de séquence |
++------+------+----------+-------------+--------------------+
+							</code></pre>
+							<p><em>Type</em> et <em>code</em> sont codés sur 8 bits et codent le message d'erreur à transmettre</p>
+							<ul>Notamment:
+								<li>Type: 08, Code: 00 ; demande d'echo</li>
+								<li>Type: 00, Code: 00 ; réponse echo</li>
+							</ul>
+							<p>mais aussi (avec les couples type/code) 03/05 (echec de routage), 03/07 (hôte de destination inconnu), 11/00 (durée de vie écoulée avant destination)</p>
+						</small>
+					</section>
+				</section>
+
+
+				<section>
+					<h3>OSPF</h3>
+					<small>
+						<p>Le routage dynamique</p>
+					</small>
+				</section>
+
+				<section>
+					<section>
+						<h3>OSPF</h3>
+						<small>
+							<p>RFC 2328 et 5340</p>
+							<p>C'est un des protocoles de choix pour les routages dans les AS (avec IS-IS)</p>
+							<p>Sa vitesse de convergence est rapide, en contrepartie il est gourmand en ressource. Il ne fonctionne que sur IP. Enfin, c'est un protocole à état de lien (link state protocol), tout comme Is-Is.</p>
+							<ul>Le principe de fonctionnement est le suivant:
+								<li>L'ensemble des routeurs est éventuellement segmenté: on obtient une ou plusieurs <em>aires</em>. Les aires sont numérotées. Il existe forcément une aire 0 appelée backbone</li>
+								<li>Chaque routeur d'une aire transmet aux autres routeurs les réseaux auxquels il est connecté à travers des messages LSA (Link State Advertisement)</li>
+								<li>Propagée de proche en proche, la tables des LSA forme une base de données (LSDB) qui est identique pour chaque routeur d'une aire.</li>
+								<li>Chaque routeur utilise ensuite SPF (Shortest Path First) pour établir la route la plus rapide vers les réseaux de LSDB</li>
+								<li>En cas de changement de topologie, les LSA sont à nouveau propagés et les calculs de routage refait</li>
+							</ul>
+						</small>
+					</section>
+					<section>
+						<h3>OSPF vs IS-IS</h3>
+						<small>
+							<p>OSPF est décrit dans la RFC 2328, Is-Is dans la RFC 1195.</p>
+							<p>Is-Is est un protocole qui a exactement le même rôle que OSPF, sauf qu'il comporte sa propre couche de transport. C'est un protocole lvl 2. OSPF fonctionne sur IP (c'est donc un protocole lvl 3) et le rend donc dépendant de cette couche. Il faut par exemple 2 instances pour contrôler IPv4 et IPv6. Is-Is est indépendant.</p>
+							<p>Is-Is utilise nativement CLNP pour sa couche de transport.</p>
+							<p>Historiquement, OSPF est utilisé dans les entreprises et Is-Is chez les providers.</p>
+							<p>Is-Is a moins de désavantages dans les très grandes structures mais il est plus long a mettre en place.</p>
+							<p>Dans les architectures full-mesh, Is-Is n'utilisant qu'un seul paquet TLV, il est moins bavard et donc moins sujet au flooding qu'OSPF qui envoie un paquet pour chaque LSA.</p>
+						</small>
+					</section>
+					<section>
+						<h3>OSPF</h3>
+						<small>
+							<ul>Les messages du protocole sont
+								<li>hello: découverte des voisins</li>
+								<li>database description: description des LSA</li>
+								<li>link state request: requête d'un LSA</li>
+								<li>link state update: mise à jour d'un LSA</li>
+								<li>link state acknowledgement: acquittement d'un LSA</li>
+							</ul>
+						</small>
+					</section>
+					<section>
+						<h3>OSPF</h3>
+						<small>
+							<p>OSPF est souvent considéré comme plus simple à mettre en place dans une infrastructure. La raison est l'habitude: dans les entreprises, on a l'habitude d'utiliser IP pour tout, OSPF trouve donc naturellement sa place.</p>
+							<p>A l'inverse, chez les providers, historiquement, on utilise Is-Is parce qu'il est indépendant de la couche 3. Par exemple, le routage IPv6 est trivial. Il a fallu attendre une nouvelle version d'OSPF (OSPFv3) pour que celui ci permette de transporter les tables IPv6. Cette indépendance néanmoins se paie par le fait de devoir maîtriser un protocole de plus dans son architecture et comme on va transporter quasiment uniquement de l'IP...</p>
+							<p>Néanmoins, on connait aujourd'hui des provider ayant déployé avec succès OSPF dans des architectures de plusieurs centaines de routeurs. Attention quand même aux bonnes pratiques, notamment concernant le filtrage des routes pour éviter le flooding.</p>
+						</small>
+					</section>
+					<section>
+						<h3>Mikrotik - OSPF</h3>
+						<small>
+							<p>Le protocole OSPF est relativement simple à mettre en place sur un routeur Mikrotik.</p>
+							<p>Comme pour n'importe quel routeur, il faut définir une instance qui portera les tables de routage (autrement dit la LSDB).</p>
+							<p>A cela s'ajoute une aire (dont le backbone avec l'ID 0.0.0.0) et qui sera attaché à l'instance précédente.</p>
+							<p>Une fois les deux entités définies, il ne reste plus qu'à désigner les interfaces sur lesquelles fonctionnera le protocole.</p>
+							<p>Si plusieurs aires cohabitent sur le même routeur, il y aura plusieurs instances qui tourneront.</p>
+							<p>OSPF fonctionnant sur IP, il faut évidemment en premier lieu avoir un réseau d'interconnexion fonctionnel !</p>
+							<p>OSPF utilise un ID pour identifier les routeurs de manières uniques. Il est très fortement conseillé de maîtriser ce paramètre, même si le choix peut être automatique.</p>
+						</small>
+					</section>
+					<section>
+						<h3>OSPF - Adjacence</h3>
+						<small>
+							<p>Le protocole OSPF fonctionne grace à une relation d'adjacence. Cette relation d'adjacence est logique. Par exemple, dans un réseau, on pourra trouver plusieurs routeurs OSPF. Chaque routeur va alors essayer de devenir BDR (Backup Designated Router). Une selection est faite sur la priorité la plus élevé sur l'interface considérée. Si les priorités sont identiques, cette élection sera faite sur le Router ID.</p>
+							<p>Une fois le BDR élu, s'il n'y a pas de DR (Designated Router), le BDR se promeut DR, et on recommence l'élection. Les élus restent élus jusqu'à un arrêt d'OSPF. Notamment, si on configure un nouveau routeur dans le réseau avec une priorité supérieure, l'élection n'est pas remise en cause: DR et BDR ne changent pas (à l'inverse de STP).</p>
+						</small>
+					</section>
+					<section>
+						<h3>OSPF - Adjacence</h3>
+						<small>
+							<p>Pour établir une relation d'adjacence, la connexion va passer par plusieurs états.</p>
+							<ul>
+								<li><span style="color:#FF4400">Down state:</span> c'est le statut de départ. L'interface envoie des paquets hello contenant ses voisins si elle en a, sinon, elle même.</li>
+								<li><span style="color:#FF4400">init state:</span> l'interface a reçu un paquet hello dans lequel elle est citée.</li>
+								<li><span style="color:#00AA22">Two way:</span> la relation d'adjacence est faite (Je suis dans le paquet hello du voisin et il est dans le mien) mais aucun échange de route n'a été fait.</li>
+								<li><span style="color:#009BD9">Exstart state:</span> l'interface commence à envoyer des informations de type 2: des DBD (DataBase Description), élection du BDR et du DR sur le lien.</li>
+								<li><span style="color:#009BD9">Exchange state:</span> Toujours avec des messages type 2, les routeurs sommencent à s'échanger des LSA (Link State Advertisement)</li>
+								<li><span style="color:#009BD9">Loading state:</span> Si des liens ne sont pas connus, ils sont demandés par des LSR (Link State Request). Les bases sont chargées.</lI>
+								<li><span style="color:#00AA22">Full Adjacency:</span> une fois le loading state terminé, les routeurs sont complètement adjacents.</li>
+							</ul>
+						</small>
+					</section>
+					<section>
+						<h3>OSPF - exemple</h3>
+						<small>
+							<p>Dans le cadre d'un routage ultra simple de 2 routeurs <em>R1</em> et <em>R2</em> connectés à travers le réseau 10.10.10.0/30 et gérant respectivement les réseaux 192.168.1.0/24 et 192.168.2.0/24, la configuration peut se faire de la façon suivante (les VPC et éventuels serveur DHCP ne sont pas configurés ici, ils sont laissés à titre d'exercice).</p>
+							<img src="./images/ospf-simple.png" />
+						</small>
+					</section>
+					<section>
+						<h3>OSPF - exemple</h3>
+						<small>
+							<p>Configuration de <em>R1</em>: le protocole ne servira qu'à transporter l'accès au réseau 192.168.1.0/24.</p>
+							<p>La configuration initiale est prévue vierge (notamment, pas de client dhcp sur ether1 et routeur déjà nommé.</p>
+							<pre data-id="code"><code data-trim>
+							[admin@R1] &gt; /ip/address/add interface=ether1 address=192.168.1.1/24
+							[admin@R1] &gt; /ip/address/add interface=ether8 address=10.10.10.1/30
+							[admin@R1] &gt; /interface/bridge/add name=lo0
+							[admin@R1] &gt; /ip/address/add interface=lo0 address=10.0.0.1/32
+							[admin@R1] &gt; /routing/id/add name=R1 id=10.0.0.1
+							[admin@R1] &gt; /routing/ospf/instance/add name=backbone router-id=R1 redistribute=connected 
+							[admin@R1] &gt; /routing/ospf/area/add name=backbone area-id=0.0.0.0 instance=backbone 
+							[admin@R1] &gt; /routing/ospf/interface-template/add area=backbone interfaces=ether8
+							</code></pre>
+							<p>On fait ensuite exactement la même chose sur R2 en remplaçant les adresses IPs. On pourra choisir comme <em>router-id</em> R2 avec la valeur 10.0.0.2.</p>
+						</small>
+					</section>
+					<section>
+						<h3>OSPF - exemple</h3>
+						<small>
+							<p>Si tout se passe comme prévu (c'est à dire si vous ne vous trompez pas dans votre copie...), vous pourrez voir une relation d'adjacence OSPF.</p>
+							<p>Par exemple, sur R2, vous aurez:</p>
+							<pre data-id="code"><code data-trim>
+							/routing/ospf/neighbor/print 
+							Flags: V - virtual; D - dynamic 
+							 0  D instance=backbone area=backbone address=10.10.10.1 priority=128 router-id=10.0.0.1 \
+							 dr=10.10.10.1 bdr=0.0.0.0 state="Full" state-changes=6 ls-retransmits=1 adjacency=3s timeout=37s 
+							</code></pre>
+							<p>Notez l'état: <em>state="Full"</em>. Par ailleurs, les routes sont bien distribuées:</p>
+							<pre data-id="code"><code data-trim>
+							/ip/route/pr
+							Flags: D - DYNAMIC; A - ACTIVE; c - CONNECT, o - OSPF
+							Columns: DST-ADDRESS, GATEWAY, DISTANCE
+							    DST-ADDRESS     GATEWAY            DISTANCE
+									DAo 10.0.0.1/32     10.10.10.1%ether8       110
+									DAc 10.0.0.2/32     lo0                       0
+									DAc 10.10.10.0/30   ether8                    0
+									DAo 192.168.1.0/24  10.10.10.1%ether8       110
+									DAc 192.168.2.0/24  ether1                    0
+							</code></pre>
+						</small>
+					</section>
+				</section>
+
+
+
+				<section data-transition="slide" data-background="./images/OS-intro.jpg" data-background-transition="zoom">
+					<h3>Architectures</h3>
+				</section>
+
+				<section>
+					<section>
+						<h3>L'avènement du cloud</h3>
+						<small>
+							<p>Le début des gros Datacenter consacre le cloud</p>
+							<p>La concentration des puissances de traitement et de stockage oblige à repenser le réseau</p>
+							<p>Pour des raisons de stabilité, une architecture à 3 niveaux est inventée</p>
+							<p>La redondance est assuré par du LACP. Les boucles sont contrôlées par STP</p>
+							<p>Chaque serveur remonte jusqu'au niveau Core avant de redescendre.</p>
+							<p>La circulation est privilégiée coté nord-sud (à savoir extérieur du DC vers intérieur)</p>
+						</small>
+					</section>
+					<section>
+						<h3>L'architecture 3-tiers</h3>
+						<img src="./images/Architecture-3tiers.svg" height="500px">
+					</section>
+					<section>
+						<h3>Leaf-Spine</h3>
+						<small>
+							<p>L'augmentation du nombre de serveurs rend le traffic est-ouest beaucoup plus important: les applications deviennent distribuées</p>
+							<p>L'architecture 3-tier n'est pas adaptée à ce type de traffic. De plus, l'utilisation de STP la rend fragile</p>
+							<p>Sa topologie est rigide: le manque de ports peu amener à devoir réarchitecturer la solution</p>
+							<p>Leaf-Spine est née de l'ensemble de ces besoins</p>
+							<p>Il utilise un routage ECPM (Equal-Cost Multipath) au lieu de la condamnation de lien par STP</p>
+							<p>Il est plus scallable: en bande passante en rajoutant des spines, en nombre de ports en rajoutant des leafs</p>
+						</small>
+					</section>
+					<section>
+						<h3>Leaf-Spine</h3>
+						<img src="./images/leaf-spine.drawio.svg" height="500px">
+					</section>
+					<section id="fragments">
+						<h3>Leaf-Spine par l'exemple</h3>
+						<small>
+							<p>Problème: J'ai 1000 serveurs à connecter en 10G, je tolère un taux de sursouscription (taux entre les flux montant et descendant) de 3:1.</p>
+							<span class="fragment">
+								<p>Je choisi les LEAF cisco Nexus 93180YC-FX: 48x10/25G + 8x40/100G</p>
+								<p>Il me faut 1000/48 = 22 switchs LEAF</p>
+								<p>Pour avoir un taux de surcouscription de 3:1, il me faut sur chaque LEAF 10x48/3 = 160 G d'uplink, soit 4 port 40G, donc 4 SPINE</p> 
+								<p>J'ai besoin de 22 ports 40G sur mes SPINE, je peux donc prendre les Nexus 9332C qui supportent 32x40/100G</p>
+							</span>
+						</small>
+					</section>
+					<section>
+						<h3>Full mesh</h3>
+						<small>
+							<p>L'architecture mesh a pour but une redondance maximum. Les routeurs sont connectés aux éventuels routeurs "Edge" mais aussi entres eux.</p>
+							<p>Elle sert essentiellement à partir du moment où la connectivité est limité ou dans le cas particulier du roaming.</p>
+							<p>Les architectures full mesh les plus connues sont celles utilisées dans la liaison téléphonique.</p>
+							<p>Une telle architecture est notamment capable de maintenir la connexion pendant les changements de routeur.</p>
+							<p>Une architecture full mesh est une architecture où tous les routeurs sont connectés entres eux.</p>
+						</small>
+					</section>
+					<section>
+						<h3>Full Mesh</h3>
+						<small>
+							<p>Exemple d'une architecture full mesh à 4 routeurs.</p>
+							<img src="./images/full-mesh.svg">
+						</small>
+					</section>
+				</section>
+
+
+
+				<section>
+					<h3>BGP</h3>
+					<small>
+						<p>Border Gateway Protocol</p>
+					</small>
+				</section>
+
+				<section>
+					<section>
+						<h3>BGP</h3>
+						<small>
+							<p>Border Gateway Protocol - RFC 4271 (donc, de l'ietf)</p>
+							<p>BGP est un protocol d'échange de route. Il permet d'échanger des information de routage entre AS (Autonomous System). Il a la particularité d'utiliser TCP comme transport. Il appartient donc à la couche 4 du modèle OSI</p>
+							<p>Les décisions de routage sont fondées sur les chemins parcourus. A l'inverse de RIP (vecteur de distance), BGP utilise un vecteur de chemin. Cela signifie qu'il a une vision globale du chemin que doit parcourir un flux d'AS en AS, à l'inverse de RIP qui ne connait que le next hop et ne connais pas la qualité du lien.</p>
+							<p>La conséquence est que BGP a un temps de convergence long. Les tables de routage sont très complexes à calculer.</p>
+							<p>BGP utilise le port 179 de TCP, il est donc considéré comme un protocol applicatif</p>
+						</small>
+					</section>
+					<section>
+						<h3>BGP</h3>
+						<small>
+							<ul>Les messages du protocole sont
+								<li>open: Ce message est utilisé dès le départ. Il permet d'échanger les informations relatives aux AS (numéros) et les router ID, ainsi que de négocier les capacités de chacun des pairs</li>
+								<li>keepalive: Toutes les 30 secondes un messages keepalive est envoyé. La session est automatiquement fermé au bout de 90 secondes sans message keepalive ou update</li>
+								<li>update: Permet l'annonce de changement dans la table de routage: soit ajout, soit retrait de routes.</li>
+								<li>notification: message de fin de session</li>
+								<li>route-refresh: permet de réannoncer certain prefixe après une modification de politique de routage</li>
+							</ul>
+						</small>
+					</section>
+					<section>
+						<h3>BGP</h3>
+						<small>
+							<p>BGP utilise 2 sous protocoles: eBGP et iBGP</p>
+							<ul>
+								<li>eBGP sera utilisé entre AS, entre deux voisins (<em>neighbors</em> ou <em>peers</em>). Les routeurs devront être configuré de manière explicite pour communiquer via une communication point à point sur TCP sur le port 179.</li>
+								<li>iBGP sera utilisé dans l'AS. Les routeurs voisins sont identifiés par leur ID (4 octets), généralement leur adresse de loopback IPv4.</li>
+							</ul>
+							<p>BGP est principalement utilisé entre opérateurs et fournisseurs d'accès pour l'échange des routes. La plupart des utilisateurs n'ayant qu'une seule connexion vers internet, BGP est inutile, la route par défaut est suffisante. Néanmoins, une entreprise ayant plusieurs point d'accès vers internet (multi-homing) sur plusieurs fournisseurs pourrait obtenir un numéro de AS et gérer ses routages avec BGP</p>
+							<p>Les implémentations libres de BGP sont quagga software (GNU), OpenBGPD d'OpenBSD, BIRD pour les systèmes UNIX.</p>
+						</small>
+					</section>
+					<section>
+						<h3>BGP - AS</h3>
+						<small>
+							<p>BGP utilise des numéro d'AS (Autonomous System).</p>
+							<p>à l'origine sur 16 bits, ces numéros ont été étendus à 32 bits pour des raisons de disponibilité.</p>
+							<ul>Il existe des numéros spéciaux
+								<li>de 64512 à 65534, ces numéros sont privés et ne doivent pas transiter sur internet</li>
+								<li>de 4 200 000 000 à 4 294 967 294, privés aussi, mais sur 32 bits.</li>
+							</ul>
+						</small>
+					</section>
+					<section>
+						<h3>BGP</h3>
+						<small>
+							<p>L'ensemble des tables de routage du monde sont ainsi échangées. Ça fait beaucoup de tables, beaucoup de règles. Aucun routeur n'est capable de les manipuler toutes. Il faut donc les trier pour ne retenir que les tables les plus utiles.</p>
+							<p>Pour cela, l'ANSSI a mis au point un certains nombre de cas d'école qu'il a associé a de bonnes pratiques. On applique du filtrage sur les règles.</p>
+						</small>
+					</section>
+					<section>
+						<h3>Liens</h3>
+						<small>
+							<p>Dans chacun des cas que l'on vient de voir, le lien peut être établi de multiple manière et des recommandations sont émises pour chaque cas.</p>
+							<ul>
+								<li>peering bilatéral dans un point d'échange: chacun des 2 routeurs annonce les routes qu'il gère.<br>Recommandation: authentification + filtrage</li>
+								<li>peering à l'aide d'un serveur de route: même chose que précédemment, sauf qu'il existe un routeur central et que plusieurs routeurs peuvent être connectés dessus.<br>Recommandation: authentification si possible</li>
+								<li>peering privé point à point: connexion privée entre 2 routeurs.<br>Recommandation: filtrage</li>
+								<li>session multihop: la connexion se fait à travers des saut entres plusieurs routeurs.<br>Recommandation: authentification + filtrage</li>
+							</ul>
+						</small>
+					</section>
+					<section>
+						<h3>relation d'AS à AS</h3>
+						<small>
+							<p>En plus des liens d'interconnexion, les relations et les usages d'AS à AS sont documentés.</p>
+							<ul>On distingue 3 cas:
+								<li>Le peer</li>
+								<li>La feuille</li>
+								<li>Le petit transitaire</li>
+							</ul>
+						</small>
+					</section>
+					<section>
+						<h3>peer</h3>
+						<small>
+							<p>Vous gérez la relation avec un AS avec qui vous n'échangez pas de route de transit. Vous vous contentez donc d'échanger vos tables de routages internes.</p>
+							<img src="./images/peer.svg">
+						</small>
+					</section>
+					<section>
+						<h3>Feuille</h3>
+						<small>
+							<p>Vous gérez un AS qui n'offre pas de transit. Cela veut dire que vous vous contentez de gérer vos propres IP, personne ne passe dans votre AS pour en atteindre un autre. Vous êtes connecté à un AS de transit, c'est à dire un AS qui vous permet d'atteindre n'importe quelle adresse sur internet.</p>
+							<img src="./images/feuille.svg">
+						</small>
+					</section>
+					<section>
+						<h3>Petit transitaire</h3>
+						<small>
+							<p>Vous gérez un AS qui peut offrir du transit pour quelques AS feuille. Vous êtes connectés à un AS de transit.</p>
+							<img src="./images/petit-transit.svg">
+						</small>
+					</section>
+					<section>
+						<h3>filtrage</h3>
+						<small>
+							<p>Les filtrages sont de différents type. On peut filtrer par numéro d'AS ou par réseau IP.</p>
+							<p>Les bonnes pratiques recommandent (fortement)</p>
+							<ul>
+								<li>De filtrer au niveau des as de transit sur les préfixes attribués aux pairs (filtrage obligatoire des feuilles).</li>
+								<li>De filtrer le nombre maximal de préfixe reçus (pour éviter de recevoir par miroir la totalité des tables de routages du net)</li>
+								<li>De supprimer systématiquement tous les numéros d'AS privés (puisqu'ils ne sont pas uniques sur internet)</li>
+							</ul>
+							</p>Par ailleurs, il faudra filtrer les <em>martians</em>, les préfixes trop spécifiques (pour éviter des tables de routage trop grosse), les routes par défaut. Il faudra journaliser les changements d'adjacence</p>
+						</small>
+					</section>
+					<section>
+						<h3>Choix du chemin</h3>
+						<small>
+							<p>Lorsqu'un AS est connecté à plusieurs autres, il peut recevoir plusieurs fois les mêmes routes. Le choix s'opère de la manière suivante:</p>
+							<ul>
+								<li>La première route est considérée comme la meilleure</li>
+								<li>La meilleure route est celle qui a le poids <b>le plus élevé</b></li>
+								<li>ibgp: Préférer la route avec l'attribut LOCAL_PREF le plus élevé</li>
+								<li>ebgp: Préférer la route avec le plus petit AS_PATH</li>
+								<li>Préférer eBGP à iBGP</li>
+								<li>Préférer la route passant par le plus petit router-id</li>
+								<li>Préférer la route passant par le voisin avec la plus petite adresse</li>
+							</ul>
+						</small>
+					</section>
+				</section>
+
+
+				<section>
+					<h3>CDN</h3>
+					<small>
+						<p>Content Delivery Network</p>
+					</small>
+				</section>
+
+
+				<section>
+					<section>
+						<h3>CDN</h3>
+						<small>
+							<p>Quelque soit l'architecture, certains problème restent désespéremment physique. Une distance en kilomètre se traduit par un temps de latence. C'est une règle physique, et elle est têtue.</p>
+							<p>La question est donc: comment puis-je faire pour avoir une application de type mondiale avec des temps de latence acceptables ?</p>
+							<p>La réponse: le CDN: Content Delivery Network.</p>
+							<p>Il ne s'agit ni plus ni moins que de construire des images géographiquement proches de l'utilisateur, mais identiques à l'image originale. Ainsi, une image d'un serveur de mise à jour windows (Redmond, état de washington, 8000 km de distance) est atteint avec une latence de l'ordre de 20ms quand le temps de latence de Paris à Redmond est de l'ordre de 200ms.</p>
+							<p>Les temps de latence deviennent tellement important qu'il sont publiés par les provider cloud (notamment Azure: 90ms entre Paris et l'amérique de l'est).</p>
+							<p>Attention, il s'agit de temps de latence brut de point à point: il faut ajouter les latences de vos providers et de ceux de votre service.</p>
+						</small>
+					</section>
+					<section>
+						<h3>CDN</h3>
+						<small>
+							<p>Ces temps de latences sont inacceptables : de la latence dépend la vitesse en tcp.</p>
+							<p>On a donc construit des réseaux capables d'offrir des images des serveurs visés à travers des astuces de routage. Le serveur avec un temps de latence élevé se trouve donc "imagé" dans une version proche, géographiquement, de l'utilisateur. Le temps de latence est par conséquent réduit au minimum.</p>
+							<p>Parmi ces CDN, Akamaï est probablement le plus connu. Il s'agit d'un fournisseur de microsoft.</p>
+						</small>
+					</section>
+				</section>
+
+
+				<section>
+					<h3>Netfilter - IpTables</h3>
+					<small>
+						<p>Les firewalls sous linux</p>
+					</small>
+				</section>
+
+				<section>
+					<section>
+						<h3>Netfilter - iptables - les firewalls linux</h3>
+						<small>
+							<p>Un flux est caractérisé par ses couches 2, 3 et 4 source et destination. On peut avec un firewall travailler sur ses couches de différentes manières.</p>
+							<p>Le rôle du firewall n'est pas d'arrêter le traffic non désiré même si cela en fait parti. Il doit surtout adapter ce traffic afin de le faire correspondre aux exigences du réseau.</p>
+							<ul>Cela consiste donc
+								<li>A interdire le traffic non autorisé</li>
+								<li>A protéger le traffic autorisé</li>
+								<li>A prioriser le traffic autorisé</li>
+								<li>A router (couche 4 ou plus bas), le traffic afin de le rendre compatible avec le réseau d'entreprise.</li>
+								<li>A prévenir en cas d'incident.</li>
+							</ul>
+						</small>
+					</section>
+					<section>
+						<h3>Netfilter - iptables - les firewalls linux</h3>
+						<small>
+							<p>Le noyau Linux intègre en standard un firewall appelé netfilter</p>
+							<p>Il se gère avec la commande <em>nft</em> ou historiquement <em>iptables</em> grace à une couche de compatibilité</p>
+							<p>Les caractéristiques de netfilter et d'iptables sont communes:</p>
+							<ul>
+								<li>Ils sont tous les 2 <em>stateful</em>, c'est à dire qu'ils peuvent suivrent l'état des connections</li>
+								<li>Les paquets réseau sont traités dans 4 tables</li>
+								<li>Chaque table contient des chaînes qui contiennent les règles</li>
+								<li>Les règles sont terminés par un jugement, aussi appelé target</li>
+								<li>Les règles sont lues dans l'ordre dans les chaînes. Les chaînes sont ordonnées dans les tables. La première règle qui matche avec jugement est la dernière règle appliquée</li>
+								<li>Les jugement sont ACCEPT, DROP et REJECT et mettent fin au traitement</li>
+								<li>D'autres simili jugement sont disponibles: RETURN (retourne à la chaine appelante) ou CONTINUE, mais aussi JUMP (permet de sauter dans une sous chaîne) et LOG. Ce ne sont pas des jugements car le traitement continue avec les règles suivantes de la table courante. SNAT, DNAT et MASQUERADE sont aussi des jugements</li>
+							</ul>
+						</small>
+					</section>
+					<section>
+						<h3>Netfilter - iptables - les firewalls linux</h3>
+						<small>
+							<p>Un firewall fonctionne avec des tables qui contiennent des chaînes. Un paquet qui traverse le routeur passe successivement par les chaines en questions, mais pas toutes. Cela dépend du flux, c'est à dire de la source et destination du paquet.</p>
+							<ul>Il existe 5 chaînes
+								<li><span style="color:#009bd9">PREROUTING</span>. Comme son nom l'indique, un paquet la traverse quand il arrive sur une interface. Le paquet est ensuite routé (il passe par une décision de routage) et envoyé soit dans la chaîne INPUT (il est à destination de l'équipement), soit dans la chaîne FORWARD (il est a destination d'un autre équipement sur le réseau)</li>
+								<li><span style="color:#009bd9">INPUT</span>. Le paquet passe par cette chaîne quand il nous est destiné. Il est ensuite envoyé à l'application (couche 4) à laquelle il est destiné. Fin du process.</li>
+								<li><span style="color:#009bd9">FORWARD</span>. Le paquet passe par cette chaîne quand il est a destination d'un autre équipement. Il est ensuite envoyé à la chaîne POSTROUTING</li>
+								<li><span style="color:#009bd9">OUTPUT</span>. Le paquet est émis par une de nos applications, sur notre équipement. Il est ensuite routé et envoyé à la chaîne POSTROUTING.</li>
+								<li><span style="color:#009bd9">POSTROUTING</span>. Le paquet passe par cette chaîne quand il est à destination d'un équipement sur le réseau. Il est alors envoyé sur une interface.</li>
+						</small>
+					</section>
+					<section>
+						<h3>Table</h3>
+						<small>
+							<p>Il existe 4 tables dans un firewall Linux. Les tables ne contiennent pas forcément toutes les chaînes.</p>
+							<ul>
+								<li>Table <span style="color:#ff9900">RAW</span>. C'est la première table traversée et elle l'est avant que prenne place le tracking de connexion. Elle peut donc servir à le configurer.</li>
+								<li>Table <span style="color:#ff9900">MANGLE</span>. Cette table traversée directement après la mise en place du tracking sert à "mangler" (mangling packets, soit en français, mutiler les paquets...) le paquet. Il permet de changer le TOS (Type Of Service) ou tout ce qui se trouve dans l'entête IP. Il permet aussi de marquer les paquets dans un but particulier (par exemple, leur faire correspondre une table de routage particulière en fonction du type de paquets).</li>
+								<li>Table <span style="color:#ff9900">NAT</span>. Cette table sert à NATer les adresses.</li>
+								<li>Table <span style="color:#ff9900">FILTER</span>. Cette table permet de filtrer les paquets. C'est ici qu'on interdit ou autorise le passage des paquets à travers une interface.</li>
+							</ul>
+						</small>
+					</section>
+					<section>
+						<h3>Chaînes et Table</h3>
+						<small>
+							<p>Toutes les chaînes ne sont pas présentes dans toutes les tables.</p>
+							<p>On trouvera (en <span style="color:#009bd9">bleu</span> les chaîne, en <span style="color:#ff9900">orange</span> les tables)</p>
+							<table>
+								<tr>
+									<td>
+										<ul>
+											<li><span style="color:#009bd9">PREROUTING</span>
+												<ul>
+													<li><span style="color:#ff9900">RAW</span></li>
+													<li><span style="color:#ff9900">MANGLE</span></li>
+													<li><span style="color:#ff9900">NAT</span></li>
+												</ul>
+											</li>
+										</ul>
+									</td>
+									<td>
+										<ul>
+											<li><span style="color:#009bd9">FORWARD</span>
+												<ul>
+													<li><span style="color:#ff9900">MANGLE</span></li>
+													<li><span style="color:#ff9900">FILTER</span></li>
+												</ul>
+											</li>
+										</ul>
+									</td>
+									<td>
+										<ul>
+											<li><span style="color:#009bd9">POSTROUTING</span>
+												<ul>
+													<li><span style="color:#ff9900">MANGLE</span></li>
+													<li><span style="color:#ff9900">NAT</span></li>
+												</ul>
+											</li>
+										</ul>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<ul>
+											<li><span style="color:#009bd9">INPUT</span>
+												<ul>
+													<li><span style="color:#ff9900">MANGLE</span></li>
+													<li><span style="color:#ff9900">FILTER</span></li>
+												</ul>
+											</li>
+										</ul>
+									</td>
+									<td></td>
+									<td>
+										<ul>
+											<li><span style="color:#009bd9">OUTPUT</span></li>
+												<ul>
+													<li><span style="color:#ff9900">RAW</span></li>
+													<li><span style="color:#ff9900">MANGLE</span></li>
+													<li><span style="color:#ff9900">NAT</span></li>
+													<li><span style="color:#ff9900">FILTER</span></li>
+												</ul>
+											</li>
+										</ul>
+									</td>
+								</tr>
+							</table>
+						</small>
+					</section>
+					<section>
+						<h3>Netfilter</h3>
+						<small>
+							<img src="./images/netfilter_pkt_flow.png" style="background:#009bd9;"/>
+						</small>
+					</section>
+					<section>
+						<h3>Chaînes et tables</h3>
+						<small>
+							<p>Les tables et les chaînes sont parcourues dans l'ordre. A l'intérieur de chaque table, des traitements peuvent être spécifiés. Il sont parcouru dans l'ordre aussi. On comprend vite que s'il faut ne pas traiter un paquet, il faut le faire vite.</p>
+							<p>Le firewall est un système strictement ordonné. Il ne peut pas y avoir, par définition, de traitement parallèle.</p>
+						</small>
+					</section>
+					<section>
+						<h3>Iptables</h3>
+						<small>
+							<p>Si vous voulez filtrer un serveur web dont vous voulez garder le port ssh (22), vous allez travailler avec la table filter dans la chaine INPUT</p>
+							<p>Le but est donc d'ouvrir les ports 22, 80 et 443 en tcp et d'interdire tous les autres. Il faut aussi ouvrir le port 1194 en udp.. les tables ayant un comportement par défaut, on le paramètrera.</p>
+							<p>Toutes les commandes doivent être exécuter en root ou avec sudo</p>
+							<pre data-id="code"><code data-trim class="bash">
+							iptables -F			# flush les tables
+							iptables -t filter -A INPUT -i lo -j ACCEPT 
+							# accepte tout traffic sur l'interface interne
+							iptables -t filter -A INPUT -m state --state ESTABLISHED -j ACCEPT
+							# accepte tout traffic... déjà accepté
+							iptables -t filter -A INPUT -p tcp --dport 22 -j LOG
+							# on décide de loguer le traffic ssh
+							iptables -t filter -A INPUT -p tcp -m multiport --dport 22,80,443 -j ACCEPT
+							iptables -t filter -A INPUT -p udp --dport 1194 -j ACCEPT
+							# accepte le traffic par les port 22, 80 et 443 tcp et 1194 udp
+							iptables -t filter -A INPUT -j LOG
+							# on logue tout ce qui arrive ici
+							iptables -t filter -P INPUT DROP
+							# on fixe la politique par défaut
+							iptables -t filter -P FORWARD DROP
+							iptables -t filter -P OUTPUT ACCEPT
+							</code></pre>
+						</small>
+					</section>
+					<section>
+						<h3>Iptables</h3>
+						<small>
+							<p>Pour des traitements spécifiques, il est possible de créer nos propres chaines</p>
+							<p>On utilise pour cela l'option -N</p>
+							<pre data-id="code"><code data-trim class="bash">
+							iptables -N MACHAINE
+							</code></pre>
+							<p>On utilise ensuite cette chaine comme toutes les autres chaines. En supposant que j'ai un serveur mail d'installé et que je veux traiter les paquets de manière particulière, on pourrait écrire:</p>
+							<pre data-id="code"><code data-trim class="bash">
+							iptables -N MAIL
+							iptables -t filter -A INPUT -p tcp -m multiport --dport 25,110,143,465,587,993,995 -j MAIL
+							iptables -t filter -A MAIL -j LOG
+							iptables -t filter -A MAIL -j ACCEPT
+							</code></pre>
+							<p>Pour vérifier vos règles:</p>
+							<pre data-id="code"><code data-trim class="bash">
+							iptables -L -v -n
+							</code></pre>
+						</small>
+					</section>
+					<section>
+						<h3>Iptables</h3>
+						<small>
+							<p>On peut aussi spécifier la source des paquets ou la destination avec les options -s et -d respectivement</p>
+							<p>En supposant mon IP publique de 86.243.65.219 et que je me connecte sur 212.95.67.175, écrivez les règles associées pour que ssh (allez voire le fichier <em>/etc/services</em>) ne soit accepté que de mon IP publique, que les ports mails (smtp, pop, imap, smtps, submission, imaps et pops) soient ouverts et utilisent une chaine appelée MAIL. Les ports web devront être ouverts aussi et tout le reste devra être fermé.</p>
+							<p>Par ailleurs, ce serveur ne devra pouvoir sortir qu'en rsync, dns, http, https et smtp. rsync, http et https devront être limités aux dépôts debian choisis pour les mises à jour et le serveur dns sur celui configuré.</p>
+							<p>Sans m'étendre sur le sujet: écrivez un script... ça vous évitera de recommencer 20 fois parce que vous aurez oublié une règle au milieu...</p>
+						</small>
+					</section>
+					<section>
+						<small>
+							<pre data-id="code" style="width:600px; height:600px; "><code data-trim class="bash">
+							#!/bin/bash
+
+							IPT=/usr/sbin/iptables
+
+							IPadmin=192.168.122.1
+							mIP=192.168.122.96
+							IPdns="$IPadmin"
+							IPdepot=130.79.200.5
+							IPSecu1=151.101.66.132
+							IPSecu2=151.101.2.132
+							IPSecu3=151.101.194.132
+							IPSecu4=151.101.130.132
+							pWeb="80,443"
+							pMail="25,110,143,465,587,993,995"
+							pDNS="53"
+							pDepot="80,443,873"
+
+							"$IPT" -F
+							"$IPT" -X
+
+							"$IPT" -N MAIL
+							"$IPT" -N SSHD
+
+							# Quand la table n'est pas précisée,
+							# c'est la table filter qui est utilisé
+
+							"$IPT" -A INPUT -i lo -j ACCEPT
+							"$IPT" -A INPUT -m state --state ESTABLISHED -j ACCEPT
+
+							"$IPT" -A INPUT -s "$IPadmin" -p tcp --dport 22 -j SSHD
+							"$IPT" -A INPUT -p tcp -m multiport --dport "$pWeb" -j ACCEPT
+							"$IPT" -A INPUT -p tcp -m multiport --dport "$pMail" -j MAIL
+							"$IPT" -A INPUT -j LOG
+							"$IPT" -A INPUT -s "$IPadmin" -j REJECT
+
+							"$IPT" -A MAIL -j LOG
+							"$IPT" -A MAIL -j ACCEPT
+
+							"$IPT" -A SSHD -j LOG
+							"$IPT" -A SSHD -j ACCEPT
+
+							"$IPT" -A OUTPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+							"$IPT" -A OUTPUT -d "$IPdns" -p tcp --dport "$pDNS" -j ACCEPT
+							"$IPT" -A OUTPUT -d "$IPdns" -p udp --dport "$pDNS" -j ACCEPT
+							"$IPT" -A OUTPUT -d "$IPdepot" -p tcp -m multiport --dport "$pDepot" -j ACCEPT
+							"$IPT" -A OUTPUT -d "$IPSecu1" -p tcp -m multiport --dport "$pDepot" -j ACCEPT
+							"$IPT" -A OUTPUT -d "$IPSecu2" -p tcp -m multiport --dport "$pDepot" -j ACCEPT
+							"$IPT" -A OUTPUT -d "$IPSecu3" -p tcp -m multiport --dport "$pDepot" -j ACCEPT
+							"$IPT" -A OUTPUT -d "$IPSecu4" -p tcp -m multiport --dport "$pDepot" -j ACCEPT
+
+							"$IPT" -P INPUT DROP
+							"$IPT" -P FORWARD DROP
+							"$IPT" -P OUTPUT DROP
+							</code></pre>
+						</small>
+					</section>
+					<section>
+						<h3>ipset</h3>
+						<small>
+							<p>Dans le script précédent, nous avons eu à gérer 4 adresses IP pour security.debian.org. Il arrive qu'on ai beaucoup plus d'adresse que ça. Utiliser une règle par adresse n'est pas spécialement optimisé pour le moins. Et ça l'est encore moins quand on pense que l'inclusion de règle force iptables à recharger toutes les règles de la chaîne à chaque nouvelle inculsion.</p>
+							<p>Pour les ensembles d'adresses, on utilisera ipset.</p>
+							<pre data-id="code"><code data-trim>
+							apt install ipset
+							</code></pre>
+						</small>
+					</section>
+					<section>
+						<h3>ipset</h3>
+						<small>
+							<p>Pour utiliser ipset, on commence par créer une liste. Cette liste est typé, c'est à dire qu'elle ne peut contenir qu'une seule forme de données.</p>
+							<ul>
+								<li>hash:ip ou hash:ip,port : c'est une liste d'IP (avec éventuellement des ports). exemple: 8.8.8.8</li>
+								<li>hash:net : c'est une liste de réseau en notation CIDR. exemple : 8.8.8.0/24</li>
+							</ul>
+							<p>La création de la liste se fait avec le verbe create:</p>
+							<pre data-id="code"><code data-trim>
+							ipset create maliste hash:ip
+							</code></pre>
+						</small>
+					</section>
+					<section>
+						<h3>ipset</h3>
+						<small>
+							<p>Les listes se manipulent ensuite avec les verbes</p>
+							<ul>
+								<li>add : pour ajouter un élément à une liste (avec une durée de vie dans la liste)
+									<pre data-id="code"><code data-trim>
+									ipset add maliste 1.1.1.1 timeout 3600
+									</code></pre>
+								</li>
+								<li>del : pour retirer un élément d'une liste
+									<pre data-id="code"><code data-trim>
+									ipset del maliste 8.8.8.8
+									</code></pre>
+								</li>
+								<li>list : pour lister les éléments
+									<pre data-id="code"><code data-trim>
+									ipset list
+									</code></pre>
+								</li>
+							</ul>
+						</small>
+					</section>
+					<section>
+						<h3>iptables et ipset</h3>
+						<small>
+							<p>On peut évidemment, c'est tout l'intérêt, utiliser les liste ipset dans iptables.</p>
+							<p>En supposant un liste IPDepot dans ipset qui contiendrait la liste des IPs des dépôts debian, on pourrait écrire:</p>
+							<pre data-id="code"><code data-trim>
+							iptables -t filter -A OUTPUT -m set --set IPDepot dst -j ACCEPT
+							</code></pre>
+							<p>Et si j'ai une liste d'IP des administrateurs autorisés à se connecter en ssh, je pourrais avoir:</p>
+							<pre data-id="code"><code data-trim>
+							iptables -t filter -A INPUT -m set --set IPAdmin src -p tcp --dport 22 -j ACCEPT
+							</code></pre>
+							<p>Un autre intérêt est de modifier la liste avec iptables de manière dynamique:</p>
+							<pre data-id="code"><code data-trim>
+							ipset add maliste hash:ip
+							iptables -A INPUT -p tcp --dport 22 -j SET --add-set maliste src
+							iptables -A INPUT -m set --set maliste src -j DROP
+							</code></pre>
+						</small>
+					</section>
+					<section>
+						<h3>Iptables</h3>
+						<small>
+							<p>Nous avons vu les option -A et -F ainsi que -P, il en existe d'autres:</p>
+							<ul>
+								<li>-A : append. Ajoute la règle à une chaine</li>
+								<li>-D : delete. Retire une règle d'une chaine.</li>
+								<li>-F : Flush. Vide la chaine.</li>
+								<li>-I : insert. Insert une règle à l'emplacement donné/</li>
+								<li>-L : list. Liste les règle (d'une chaine, si précisé).</li>
+								<li>-N : new (chain). Créé une nouvelle chaîne.</li>
+								<li>-X : delete. Efface une chaine.</li>
+							</ul>
+						</small>
+					</section>
+					<section>
+						<h3>Iptables</h3>
+						<small>
+							<p>Iptables ne sauve pas ses règles. Par ailleurs, l'inclusion de celles ci est très lent. On préfère par conséquent souvent travailler directement sur le format de la sauvegarde</p>
+							<p>Pour sauvegarder:</p>
+							<pre data-id="code"><code data-trim class="bash">
+							iptables-save &gt;mestables
+							</code></pre>
+							<p>Et pour restaurer:</p>
+							<pre data-id="code"><code data-trim class="bash">
+							iptables-restore &lt;mestables
+							</code></pre>
+						</small>
+					</section>
+					<section>
+						<h3>Iptables</h3>
+						<small>
+							<p>Notez que les règles ne sont pas persistentes: elles sont effacées à chaque reboot... Il faut donc les remettre en place</p>
+							<p>La méthode la plus simple (mais ce n'est pas la seule) est d'installer le paquet bien nommé <em>iptables-persistent</em></p>
+							<pre data-id="code"><code data-trim code="bash">
+							sudo apt install iptables-persistent
+							</code></pre>
+							<p>Durant l'installation, on vous demande si vous voulez conserver les tables actuelles. Vous pouvez, mais vous pouvez aussi les modifier plus tard</p>
+							<p>Les règles seront chargée à partir de <em>/etc/iptables/rules.v4</em> et <em>/etc/iptables/rules.v6</em>. Il suffit de modifier ces fichiers pour modifier le jeu de règle du démarrage</p>
+						</small>
+					</section>
+					<section class="fragments">
+						<h3>Vous avez compris ?<br />Alors, on recommence !</h3>
+						<small>
+							<p>C'est que iptables est <span class="fragment">obsolète :-)</span></p>
+							<span class="fragment">
+								<p>Depuis Buster (debian 10), on utilise netfliter (nftables) et la syntaxe est très différente</p>
+								<p>Néanmoins, tous les principes restent d'actualités et d'ailleurs, iptables que vous avez installé, utilise nftable pour écrire les règles. Vous n'avez donc pas tout à fait appris un truc inutile et la plupart des sysadmin continue d'utiliser iptables comme si de rien n'était</p>
+							</span>
+							<span class="fragment">
+								<p>Donc, on recommence (enfin, pas tout à fait quand même)</p>
+								<pre data-id="code"><code data-trim class="bash">
+								systemctl enable nftables
+								systemctl start nftables
+								</code></pre>
+								<p>Et nftables contient un chouette outil (<em>/usr/sbin/iptables-translate</em>) qui peut traduire les règles et surtout, assurer le passage de l'ancien système au nouveau:</p>
+							</span>
+						</small>
+					</section>
+					<section>
+						<h3>Migration iptables vers nftables</h3>
+						<small>
+							<p>Il suffit de passer par le fichier de sauvegarde de iptables, puis de le convertir au format nft, puis de le réinstaller</p>
+							<pre data-id="code"><code data-trim class="bash">
+							iptables-save &gt;mestables.ipt
+							iptables-restore-translate -f mestables.ipt &gt;nftables.conf
+							nft -f nftables.conf
+							</code></pre>
+							<p>Avant de réinstaller, on fait le ménage:</p>
+							<pre data-id="code"><code data-trim class="bash">
+							for table in INPUT OUTPUT FORWARD; do
+								iptables -F "$table"
+								iptables -P "$table" ACCEPT
+							done
+							for table in MAIL SSHD; do
+								iptables -F "$table"
+								iptables -X "$table"
+							done
+							</code></pre>
+						</small>
+					</section>
+					<section>
+						<h3>nftables</h3>
+						<small>
+							<p>Il suffit ensuite de réinstaller le nouveau fichier de sauvegarde</p>
+							<pre data-id="code"><code data-trim class="bash">
+							nft -f nftables.conf
+							nft list ruleset
+							</code></pre>
+							<p>Pour que le firewall se lance au démarrage, il suffit de copier le fichier nftables.conf dans <em>/etc</em></p>
+							<pre data-id="code"><code data-trim class="bash">
+							sudo cp nftables.conf /etc/
+							</code></pre>
+						</small>
+					</section>
+					<section>
+						<h3>Quelques différences entre iptables et nftables</h3>
+						<small>
+							<p>Dans iptables, 2 targets = 2 commandes. Par exemple pour LOG et DROP</p>
+							<pre data-id="code"><code data-trim class="bash">
+							iptables -A INPUT -p tcp --dport 25 -j LOG
+							iptables -A INPUT -p tcp --dport 25 -j DROP
+							## dans nft, 1 seule règle
+							nft add rule filter input tcp dport 25 log drop
+							</code></pre>
+							<p>La possibilité de créé des "set"<p>
+							<pre data-id="code"><code data-trim class="bash">
+							nft add rule filter input tcp sport { http, https } accept
+							</code></pre>
+							<p>La possibilité de nommer ses "set"s et de les compléter</p>
+							<pre data-id="code"><code data-trim class="bash">
+							nft "add set ip filter degage { type ipv4_addr; }"
+							nft "add element ip filter degage { 192.168.9.2 }"
+							nft "add rule ip filter INPUT ip saddr @degage log drop"
+							nft "add element ip filter degage { 192.168.7.3, 192.168.234.23 }"
+							</code></pre>
+						</small>
+					</section>
+					<section>
+						<h3>Le firewall simplifié</h3>
+						<small>
+							<p>Dans les cas les plus simple (typiquement, poste de travail), on préferera gérer le firewall autrement. Les pistes à creuser sont <em>firewalld</em></p>
+							<p>Si une interface graphique est présente, on pourra passer par <em>gufw</em>: en général, des sets de règles prêtes à l'utilisation sont préconfigurés</p>
+						</small>
+					</section>
+					<section>
+						<h3>Iptables - NAT</h3>
+						<small>
+							<p>Nous venons d'utiliser la tables filter pour filtrer les connexion. nous aurons aussi souvent besoin de faire du source-NAT ou destination-NAT, typiquement si notre box linux sert de routeur vers internet.</p>
+							<p>La table NAT est faites pour cela. On utilisera la chaîne PREROUTING dans le cas du destination-NAT et la chaine POSTROUTING dans le cas du source-NAT.</p>
+							<p>Nous avons donc 2 (+1) nouvelles targets qui sont DNAT, SNAT et MASQUERADE.</p>
+						</small>
+					</section>
+					<section>
+						<h3>Iptables - NAT</h3>
+						<small>
+							<ul>
+								<li>DNAT est utilisé dans le cas de paquets venant d'internet à destination d'un réseau local.</li>
+								<li>SNAT est utilisé dans le cas de paquets venant du réseau privé à destination d'internet.</li>
+								<li>MASQUERADE est utilisé come SNAT, mais si l'adresse source de remplacement n'est pas définie à priori (le WAN est en DHCP, quoi...).</li>
+							</ul>
+							<pre data-id="code"><code data-trim>
+							# en entrée
+							iptables -t nat -A PREROUTING -p tcp -d $IpPublique --dport 80 -j DNAT --to-destination $IpServerWeb
+							# en sortie
+							iptables -t nat -A POSTROUTING -o $ifaceWAN -j SNAT --to-source $IpPublic
+							# ou
+							iptables -t nat -A POSTROUTING -o $ifaceWAN -j MASQUERADE
+							</code></pre>
+						</small>
+					</section>
+					<section>
+						<h3>IpTables - Mangle</h3>
+						<small>
+							<p>La table mangle est la première parcourue. Comme il faut économiser de la ressource sur les gros routeurs, c'est une table de choix pour faire un premier tri de ce qu'on accepte ou pas. Par exemple, est il bien utile d'attendre la table filter pour droper un paquet avec une adresse privée sur l'interface exposée au web ?</p>
+							<pre data-id="code"><code data-trim>
+							# bloque les paquets invalides
+							iptables -t mangle -A PREROUTING -m conntrack --ctstate INVALID \
+									-j DROP
+							# bloque les nouveaux paquets qui ne sont pas des SYN
+							iptables -t mangle -A PREROUTING -p tcp ! --syn -m conntrack --ctstate NEW \
+									-j DROP
+							# limite le nombre de reply à icmp à 3 par seconde par adresse ip
+							iptables -t mangle -A PREROUTING -p icmp -m hashlimit --hashlimit-name icmp \
+									--hashlimit-mode srcip --hashlimit 3/second --hashlimit-burst 5 \
+									-j ACCEPT
+							</code></pre>
+						</small>
+					</section>
+					<section>
+						<h3>IpTables</h3>
+						<small>
+							<p>Certaine règles ne peuvent pas se trouver ailleurs que dans la table filter (connlimit et conntrack ne sont disponible que dans la table filter).</p>
+							<pre data-id="code"><code data-trim>
+							# rejette les connexions des hôtes qui ont plus de 20 connexions.
+							iptables -A INPUT -p tcp -m connlimit --connlimit-above 20 -j REJECT --reject-with tcp-reset
+							# limite les SYN flood
+							iptables -A INPUT -p tcp -m conntrack --ctstate NEW -m limit --limit 60/s --limit-burst 20 -j ACCEPT
+							iptables -A INPUT -p tcp -m conntrack --ctstate NEW -j DROP
+							</code></pre>
+							<p>Mais IpTables va bien plus loin que ça. La commande suivante limite à 800 le nombre de connexion en provenance des réseau de classe C</p>
+							<pre data-id="code"><code data-trim>
+							iptables  -A INPUT -p tcp --syn --dport 80 -m connlimit \
+											--connlimit-above 800 --connlimit-mask 24 \
+											-j REJECT --reject-with tcp-reset
+							</code></pre>
+						</small>
+					</section>
+					<section>
+						<h3>IpTables</h3>
+						<small>
+							<p>Autre exemple : je veux bloquer les tentatives de connexions (réussie ou pas) sur le port ssh s'il y en a plus de 10 toutes les 2 minutes (120 secondes).</p>
+							<pre data-id="code"><code data-trim>
+							iptables -A INPUT -p tcp --dport 22 -i enp1s0 -m state --state NEW -m recent --set
+							iptables -A INPUT -p tcp --dport 22 -i enp1s0 -m state --state NEW -m recent --update \
+										--seconds 120 --hitcount 10 -j DROP
+							</code></pre>
+						</small>
+					</section>
+					<section>
+						<h3>conntrack</h3>
+						<small>
+							<p>Conntrack est un module qui permet de tracker les connexions.</p>
+							<p>Il s'installe simplement avec un <code>apt install conntrack</code>. Son utilisation est relativement complexe étant donné qu'il peut aussi faire du tri et de la sélection de destination:</p>
+							<pre data-id="code"><code data-trim>
+							# liste toutes les connexions
+							conntrack -L
+							# ne liste que les connexion à destination du port 22
+							conntrack -L -p tcp --dport 22
+							</code></pre>
+						</small>
+					</section>
+				</section>
+
+
+
+				<section>
+					<h3>Bastion</h3>
+					<small>
+					</small>
+				</section>
+
+
+				<section>
+					<section>
+						<h3>Bastion</h3>
+						<small>
+							<p>Un bastion est un élément du réseau qui concentre les défenses. Comme dans le cas d'un château fort d'où le nom est tiré, le bastion est le passage obligatoire pour entrer dans une zone. Il se trouve en général dans une DMZ propre et n'est accessible que de l'extérieur.</p>
+							<p>Si on imagine un serveur sensible, l'utilisation correct du bastion est de se placer entre la partie publique et le serveur. Nous aurons donc de manière logique une connexion sur le bastion, puis, à partir du bastion, une connexion sur le serveur. Idéalement, le serveur n'autorisera que les connexions à partir du bastion.</p>
+							<p>Dans certains cas, on peut avoir besoin d'un bastion pour des connexions particulièrement sensibles. Par exemple, une zone (ou un réseau) de management devrait être systématiquement protégé par un bastion. La connexion à la zone de management serait alors systématiquement filtrée.</p>
+							<p>De l'extérieur, nous aurions alors un premier filtrage sur le VPN, un deuxième sur le bastion générique, un troisième sur le bastion propre à la zone de management et un quatrième sur les serveurs à manager.</p>
+						</small>
+					</section>
+					<section>
+						<h3>Bastion et logs</h3>
+						<small>
+							<p>Une partie importante du travail du bastion est de loguer tout ce qui se passe.</p>
+							<p>Les logs ne devront jamais être locaux. Il y a au moins 2 raisons à cela:</p>
+							<ul>
+								<li>Dans les logs, on va trouver trace de toutes les connexions effectuées, donc de toutes les adresses IP intéressantes du réseau. Certes, il suffit qu'un Caïn quelconque compromette le serveur pour ne pas tarder à avoir ce genre d'informations, mais ce n'est pas la peine de lui faciliter la tache non plus !</li>
+								<li>Un bastion pour être efficace doit loguer beaucoup de chose. Il est donc relativement facile d'arriver à un DOS parce que les logs sont pleins. De plus, cette quantité de logs n'est pas facile à analyser telle quel. Il faudra prévoir des outils pour cela. Or plus on a d'outils sur un bastion, plus il est faible. Donc exportez les logs et installer vous une station spécialisée dans ce rôle.</li>
+							</ul>
+						</small>
+					</section>
+					<section>
+						<h3>Bastion avec SSH</h3>
+						<small>
+							<p>SSH qui est toujours notre couteau suisse nous permet une utilisation simple du concept de bastion.</p>
+							<p>On va pour ce faire utiliser 4 stations debian. La première sera notre machine cliente; la seconde sera notre firewall, la troisième, le bastion et la dernière le serveur sensible.</p>
+							<img src="./images/bastion-simple.png" style="height:300px;"/>
+						</small>
+					</section>
+					<section>
+						<h3>bastion</h3>
+						<small>
+							<p>Le firewall devra interdire toutes les connexions (sauf icmp, avec ses limites). Il devra NATer le port 22 vers le bastion. Il devra aussi autoriser le routage du bastion vers le réseau 10.0.0.0/24. Le reste est interdit.</p>
+							<p>Le bastion devra loguer toutes ses connexions. Il ne devra accepter de connexions que sur le port 22. Il devra aussi interdire toute connexion sortante, sauf celle sur un port 22.</p>
+							<p>Le serveur ne devra accepter sur son port 22 que les connexions du bastion. Il devra refuser et loguer toutes les autres tentatives.</p>
+							<p>Par ailleurs, le bastion <span style="color:#ff4400;">NE POURRA PAS</span> s'identifier sur le serveur. Il faudra donc passer sur un authentification par clé et le bastion ne possède aucune des clé privée permettant de se connecter où que ce soit.</p>
+						</small>
+					</section>
+					<section>
+						<h3>bastion et tunnel</h3>
+						<small>
+							<p>Le bastion peut éventuellement servir à établir des tunnels comme on vient de le voir.</p>
+							<p>Notamment, un tunnel d'un port sur l'adresse de loopback permet de contourner le firewall puisqu'on accepte toujours le traffic entrant et sortant sur cette interface.</p>
+							<p>Utiliser netcat (commande nc) pour ouvrir un port en lecture sur le serveur (par exemple sur 127.0.0.1:8080) et lisez le directement à partir de la station cliente.</p>
+							<p>Vous notez qu'on peut utiliser à la fois les option -J et -L ou -R. On utilisera cette notation par exemple pour faire du RDP sur un port masqué par un firewall. Attention (je sais, je vais encore parler en mal de microsoft mais...) le firewall de microsoft est parfois laxiste avec les requêtes qui lui sont faites. Il ne respecte pas forcément les RFCs. Notamment, une connexion (qui serait autorisé sur 127.0.0.1 mais interdite sur l'adresse privée) ne réussira pas forcément avec quelque chose du type <code>ssh -L 8080:localhost:80 serveur-microsoft</code>. En effet, le firewall peut "simplifier" la requête de routage en tentant un connexion directe sur l'adresse privée.</p>
+							<p>Enfin bref, comme d'hab, méfiez vous de microsoft :-)</p>
+						</small>
+					</section>
+					<section>
+						<h3>Bastion</h3>
+						<small>
+							<p>Les bastions commerciaux ne sont qu'une déclinaison de ce qu'on vient de faire à la main.</p>
+							<p>Leur seul avantage est donc d'avoir pré préparé toute la partie pénible de configuration des logs (faites toujours des logs distants sur les bastions, vous l'ai-je déjà dit ?) ainsi que la partie transfert de port RDP, VNC et je ne sais quoi d'autres.</p>
+							<p>Ah, oui, pour certains, c'est plus joli que la ligne de commande... Ma foi, les goûts et les couleurs...</p>
+							<p>On va quand même citer guacamole de la fondation apache, teleport ou encore warpgate. A noter, guacamole à l'origine, sert à faire du remote desktop. Les deux concepts sont proches.</p>
+						</small>
+					</section>
+				</section>
+
+
+				<section>
+					<h3>Mangle et traffic shaping</h3>
+					<small>
+					</small>
+				</section>
+
+				<section>
+					<section>
+						<h3>Traffic Shaping</h3>
+						<small>
+							<p>Très vite est apparu un besoin de classer les différents flux en fonction de leur priorité et de leur particularité</p>
+							<p>Ainsi, des flux de téléchargement avaient besoin de beaucoup de bande passante mais pouvait sans problème être interrompus pendant que des flux de téléphonie, qui eux n'utilisent qu'une bande passante très limité, ont en revanche besoin d'une transmission commutée, alors que les réseaux d'administration ont besoin de stabilité.</p>
+							<p>Pour mettre tout le monde d'accord, on implémente la QoS</p>
+						</small>
+					</section>
+					<section>
+						<h3>Traffic shaping</h3>
+						<small>
+							<p>La plus simple implémentation se fait directement dans les routeurs lvl 2. Il s'agit simplement de rendre certains vLANs prioritaires par rapport à d'autres en utilisant le champ CPC du TAG vLAN.</p>
+							<p>La priorité la plus haute correspond à la valeur la plus haute. Cette manière simple ne convient généralement pas: Les flux n'ont jamais besoins d'une priorité absolue.</p>
+						</small>
+					</section>
+					<section>
+						<h3>Traffic shaping</h3>
+						<small>
+							<p>De manière plus générale, on emploie le traffic shaping sur les firewall, donc sur les extrémités du réseau.</p>
+							<p>En effet, ce sont généralement les points de congestions. Dans un point de congestion, on tente d'envoyer des flux. Ces flux peuvent, ou pas, passer. S'ils ne passent pas, avant que vous soyez prévenu du problème de congestion, ils sont mis en queue chez le FAI. C'est là que ça pose problème: vous ne contrôlez pas l'ordre de départ des paquets chez le FAI.</p>
+							<p>Le principe du Traffic Shaping est donc de ne jamais utiliser la queue du FAI, donc de lui envoyer les flux plus lentement que ce qu'il autorise.</p>
+							<p>Il s'agit d'avoir un contrôle sur la file "egress"</p>
+							<p>La file "ingress" n'est jamais contrôlable.</p>
+						</small>
+					</section>
+					<section>
+						<h3>Généralités - firewall</h3>
+						<small>
+							<p>Les routeurs firewall ont l'implémentation suivante:</p>
+							<img src="./images/PacketFlowDiagram_v6_a.svg"/>
+						</small>
+					</section>
+					<section>
+						<h3>Généralité - firewall - Rappel</h3>
+						<small>
+							<p>Tous les paquets, quelques soient les décisions de routage, suivent donc le même schéma logique:</p>
+							<ul>
+								<li><span style="color:#FF9900">Prerouting</span> : Raw prerouting -&gt; Connection tracking -&gt; mangle prerouting &gt; dst-nat</li>
+								<li><span style="color:#FF4400">Input</span> : Mangle input -&gt; Filter input -&gt; Simple queues</li>
+								<li><span style="color:#FF4400">Forward</span> : (bridge decision) -&gt; Mangle forward -&gt; Filter forward</li>
+								<li><span style="color:#00AA22">Output</span> : (bridge decision) -&gt; raw output -&gt; Connection tracking -&gt; mangle output -&gt; Filter</li>
+								<li><span style="color:#00AA22">Postrouting</span> : Mangle postrouting -&gt; src-nat -&gt; HTS global &gt; Simple queues</li>
+							</ul>
+							<p>On utilisera la capacité des routeurs à utiliser plusieurs queue et/ou plusieurs table de routage pour router les paquets.</p>
+						</small>
+					</section>
+					<section>
+						<h3>Mangle et marquage</h3>
+						<small>
+							<p>On peut dans un routeur agir à plusieurs endroits. Je vous propose dans un premier temps de travailler sur le marquage des paquet en fonction d'un élément prédéterminé.</p>
+							<p>Supposez une entreprise dont le routeur-firewall est connecté à 2 FAI. Le premier FAI (FAI-1) est la FAI principal. Tout le flux passe par là sauf en cas de panne. On passera alors par le FAI-2.</p>
+							<p>Cette entreprise possède aussi un cloud hybride, une partie se trouve chez elle et une autre, dans le cloud. Pour une raison quelconque, on se rend compte que si le FAI-1 rempli bien ses obligations, la connexion au cloud est moins rapide par ce FAI que par le FAI-2. Il serait donc judicieux de pouvoir passer tout le traffic par le FAI-1 <span style="color:#ff9900">sauf le traffic cloud</span> qui passerait par le FAI-2.</p>
+							<p>On utilise pour cela la table MANGLE et la chaine PREROUTING (ou OUTPUT si vous faîtes les ping directement du routeur).</p>
+						</small>
+					</section>
+					<section>
+						<h3>Mangle et QoS</h3>
+						<small>
+							<p>La QoS est en général difficile à comprendre. On distingue 2 queues : ingress (queue en entrée) et egress (queue en sortie). Ces queues sont présentes avant tout passage de table ou de chaine du firewall. On agit directement sur l'ordre des trames dans la carte réseau: ce sont les registres de cette carte que l'on va régler. C'est donc un peu rugueux...</p>
+							<p>Il existe plusieurs type de mise en forme du traffic. Le plus simple est la queue "simple". Elle vous permet de fixer une limite de débit et de dire quel type de paquet est prioritaire. C'est à peu près tout.i Elle se met donc très facilement en place mais n'est en générale pas adaptée aux structures complexes.</p>
+							<p>Nous utiliserons la queue tree. Ici, on pourra agencer nos priorité par groupe. On pourra par exemple faire un groupe "web" qui contient tout ce qui ressemble à du http ou du mail, donner une grosse bande passante à ce groupe mais une très faible priorité. On pourra faire un autre groupe de type téléphonie avec nos flux de téléphonie et de visio. On fera ici l'inverse: peu (mais suffisamment) de bande passante mais forte priorité. On rajoutera un flux pour l'administration (très prioritaire mais très peu de bande passante) puis on incluera chaque groupe à l'intérieur d'un flux limité à ce que notre FAI nous donne moins 5%.</p>
+						</small>
+					</section>
+					<section>
+						<h3>Traffic shaping en egress</h3>
+						<small>
+							<p>Une fois le principe compris, la recette est relativement simple.</p>
+							<ul>
+								<li>On créer un pipe. Ce pipe portera les limites à ne pas dépasser. Sur un lien fibre 100M, par exemple, on pourra lui fixer 95M max. Ces 5M de moins que le débit max théorique nous permet d'être sûr de ne jamais utiliser la mise en queue du FAI.</li>
+								<li>On créer une queue. Cette queue contient les flux qu'on veut controler. On pourrait par exemple faire une queue pour la téléphonie, une autre pour internet.</li>
+								<li>On créer une rule. La règle lie le pipe et la queue, autrement dit, la règle permet de dire quelle pipe s'applique à quelle queue.</li>
+							</ul>
+						</small>
+					</section>
+					<section>
+						<h3>Traffic shaping - limitation</h3>
+						<p>Et j'écris gros:</p>
+						<p><span style="color:#009bd9">Le traffic shaping ne peut se faire que dans la queue egress</span> (celle qui sort).</p>
+						<p>La queue ingress se contente de subir ce qu'on lui envoie. Le seul moyen de réguler le traffic sur cette interface, et ça ne marche qu'en tcp, c'est de droper des paquets.</p>
+					</section>
+				</section>
+
+
+
+
+				<section class="fragments">
+					<h3>Merci à vous</h3>
+					<small>
+						<p>C'est ici qu'on se quitte</p>
+						<span class="fragment">
+							<a href="https://tekatux.fr">
+								<img src="./images/logo tekatux_long-07.svg" alt="logo TekaTux" style="height: 180px; margin: 0 auto rem4 auto; background: transparent;" class="demo-logo">
+							</a>
+							<p style='color:#009bd9'>Mais n'oubliez pas:</p>
+							<h3 style='color:#009bd9'>Restez libre</h3>
+						</span>
+					</small>
+				</section>
+
+
+			</div>
+		</div>
+
+		<script src="dist/reveal.js"></script>
+		<script src="plugin/zoom/zoom.js"></script>
+		<script src="plugin/notes/notes.js"></script>
+		<script src="plugin/search/search.js"></script>
+		<script src="plugin/markdown/markdown.js"></script>
+		<script src="plugin/highlight/highlight.js"></script>
+		<script>
+			// More info about initialization & config:
+			// - https://revealjs.com/initialization/
+			// - https://revealjs.com/config/
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				center: true,
+				hash: true,
+
+				// Learn about plugins: https://revealjs.com/plugins/
+				plugins: [ RevealZoom, RevealNotes, RevealSearch, RevealMarkdown, RevealHighlight ]
+			});
+		</script>
+	</body>
+</html>

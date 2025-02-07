@@ -79,3 +79,33 @@ Les RFC sont la source d'information (en matière de réseau) la plus précise.
 l'Adresse MAC permet d'envoyer des informations et d'en recevoir. 
 
 
+### switch 
+
+
+Une adresse IP qui qui communique en entré => réceptionné par le switch 
+Le switch contient une table d'adressage qui fait le liens entre les adresse mac d'un appareil et son adresse ip actuel.  
+
+Les technologie ondulatoire fonctionne encore comme un HUB. 1 adresse qui envoie un message au HUB et celui-ci renvoie ce message à tout le monde. e.g. un réseau wifi. 
+
+
+
+192.168.24.34/27
+11111111.11111111.11111111.11100000
+255.255.255.224
+ => le réseau comment à 31 
+ => non il ne sont pas dans le même réseau 
+
+
+ 10.10.25.48/8
+ 11111111.00000000.00000000.00000000
+ 255.0.0.0
+ 
+ => on commence notre réseau en  10.0.0.0
+ =>  
+
+
+172.20.34.10/29
+11111111.11111111.11111111.11111000
+255.255.255.248
+=> .248
+=> non il ne son pas dans le même réseau
